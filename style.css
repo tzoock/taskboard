@@ -1,0 +1,129 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+padding-top: 60px;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  /*outline: red 1px solid;*/
+}
+@media (min-width: 0) {
+
+  .navbar-nav > li {         /* Effects the problem regarding the float under 768px, fixes that. */
+    float: left;
+  }
+
+  .navbar-nav > li > a {     /* Effects the box around the board selected box so it will be the same as above 768px. */
+    padding: 15px;
+  }
+  .nav.navbar-nav {          /* Effects the board and members under 768px, gets them inline. */
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+}
+
+
+.navbar-default {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+}
+
+.navbar-brand {
+  width: 45px;
+  height: 45px;
+  padding: 0;
+}
+
+
+.navbar-brand img {
+  width: 100%;
+}
+
+
+.contflex {
+
+  max-height: 100%;
+  padding: 15px 10px;
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: space-around;
+
+}
+
+.column {
+  max-height: 80vh;
+  width: 300px;
+  position: relative;
+  /*padding: 10px 5px;*/
+  margin: 8px 10px;
+  outline: 1px olivedrab solid;
+  /*display: block;*/
+}
+
+.main-column {
+
+  max-height: 80vh;
+  text-align: center;
+  border: solid 1px #000000;
+  overflow: auto;
+  /*background-color: #726a85;*/
+}
+
+
+.column header {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  text-align: center;
+  width: 100%;
+  background-color: #E7E7E7;
+  border: 1px solid #2c2c2c;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.column footer {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background-color: #E7E7E7;
+  border: 1px solid #2c2c2c;
+  width: 100%;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.column ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.column ul li {
+  background-color: #ffd570;
+  margin: 3px ;
+  padding: 5px;
+}
+
+.add-list {
+  width: 300px;
+}
+
+.add-card {
+  width: 100%;
+}
