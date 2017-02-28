@@ -7,7 +7,7 @@ body {
 }
 
 body {
-padding-top: 60px;
+padding-top: 95px;
   box-sizing: border-box;
 }
 
@@ -39,12 +39,14 @@ padding-top: 60px;
   left: 0;
   right: 0;
   margin: 0;
+
 }
 
 .navbar-brand {
   width: 45px;
   height: 45px;
   padding: 0;
+  z-index: 1;
 }
 
 
@@ -64,18 +66,16 @@ padding-top: 60px;
 }
 
 .column {
-  max-height: 80vh;
-  width: 300px;
+  max-height: calc(100% - 80px);
+  width: 250px;
   position: relative;
-  /*padding: 10px 5px;*/
   margin: 8px 10px;
-  outline: 1px olivedrab solid;
   /*display: block;*/
 }
 
 .main-column {
 
-  max-height: 80vh;
+  max-height: calc(100vh - 180px);
   text-align: center;
   border: solid 1px #000000;
   overflow: auto;
@@ -87,16 +87,50 @@ padding-top: 60px;
   position: absolute;
   bottom: 100%;
   left: 0;
-  text-align: center;
+  text-align: left;
   width: 100%;
   background-color: #E7E7E7;
+  margin: 0;
   border: 1px solid #2c2c2c;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  height: 50px;
+  padding: 3px 5px;
+}
+
+.column header span {
+  border: 1px solid #434343;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  border-radius: 3px;
+  padding: 2px 4px;
+}
+.list-name {
+  background-color: #E7E7E7;
+  /*vertical-align: middle;*/
+  width: 70%;
+}
+
+.panel-heading {
+  margin: 0;
+}
+
+.del-list-btn {
+  display: none;
+  position: absolute;
+  top: 100%;
+  /*left: -30px;*/
+  right: 0;
+}
+
+.del-list-btn:hover {
+  background-color: #b80004;
+  color: white;
 }
 
 .column footer {
-  position: absolute;
+  position: relative;
   top: 100%;
   left: 0;
   right: 0;
@@ -118,12 +152,21 @@ padding-top: 60px;
   background-color: #ffd570;
   margin: 3px ;
   padding: 5px;
+  height: 120px;
 }
 
 .add-list {
-  width: 300px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: -35px;
+  padding: 10px 80px;
+  text-align: center;
 }
 
 .add-card {
   width: 100%;
+}
+
+.list-name {
+  font-weight: bolder;
 }
