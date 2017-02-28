@@ -3,31 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <title>Task Board</title>
-  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+  <!--<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">-->
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+<header>
+  <a class="logo" href="#">
+    <img src="assets/taskboard%20logo.svg" alt="">
+  </a>
+  <nav>
+    <ul>
+      <li>Board</li>
+      <li>Members</li>
+    </ul>
+  </nav>
+</header>
 
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#"><img src="assets/taskboard%20logo.svg" alt=""></a>
-
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Board<span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Members</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
 <main class="contflex" id="contflex">
 
   <div class="column">
     <header class="list-header panel-default panel">
       <div class="list-name">Back-Log</div>
-      <span>
-        Edit
+      <span class="caret">
+
         <button class="del-list-btn">
           Delete List
         </button>
@@ -55,8 +54,7 @@
   <div class="column">
     <header class="list-header panel-default panel">
       <div class="list-name">To Do</div>
-      <span>
-        Edit
+      <span class="caret">
         <button class="del-list-btn">
           Delete List
         </button>
@@ -84,8 +82,7 @@
   <div class="column">
     <header class="list-header panel-default panel">
       <div class="list-name">In Progress</div>
-      <span>
-        Edit
+      <span class="caret">
         <button class="del-list-btn">
           Delete List
         </button>
@@ -113,8 +110,8 @@
   <div class="column">
     <header class="list-header panel-default panel">
       <div class="list-name">Done</div>
-      <span>
-        Edit
+      <span class="caret">
+
         <button class="del-list-btn">
           Delete List
         </button>
@@ -143,6 +140,7 @@
   <button class="add-list btn-default btn" id="addList">Add List</button>
 
 </main>
+
 </body>
 <script src="script.js"></script>
 </html>

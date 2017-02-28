@@ -2,8 +2,7 @@
 const btn = document.getElementById('addList');
 const listTamplate = `<header class="list-header panel-default panel">
       <div class="list-name">New List</div>
-      <span>
-        Edit
+      <span class="caret">
         <button class="del-list-btn">
           Delete List
         </button>
@@ -59,11 +58,11 @@ function titels() {
 
 function editName() {
   const target = event.target;
-  // const preText = target.textContent;
+  const preText = target.textContent;
   const papa = target.parentNode;
   const newInput = document.createElement('input');
   papa.replaceChild(newInput, target);
-  // newInput.textContent = preText;
+  newInput.value = preText;
   newInput.focus();
 
   newInput.addEventListener('keydown', (event) => {
@@ -82,7 +81,8 @@ function editName() {
     const newTitle = event.target;
     papa.replaceChild(mama, newTitle);
     mama.textContent = newTitle.value;
-    mama.addEventListener('click', editName)
+    mama.addEventListener('click', editName);
+    mama.className='list-name';
   })
 }
 
@@ -105,14 +105,17 @@ function openDeleteBtn() {
   }
   delListBtn.addEventListener('click', (event) => {
     const target = event.target;
-    const promptDel = prompt('Deleting TODO list. Are you sure?');
-    if (promptDel === '') {
+    const promptDel = confirm('Deleting TODO list. Are you sure?');
+    if (promptDel === true) {
       const EE = target.parentNode.parentNode.parentNode;
       console.info(EE);
       EE.remove()
     }
     else {
     }
+    delListBtn.addEventListener('blur', (event) => {
+      delListBtn.style.display = 'none'
+    })
   })
 }
 
