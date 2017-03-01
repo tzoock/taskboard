@@ -1,15 +1,28 @@
-
-const btn = document.getElementById('addList');
+const addListBtn = document.getElementById('addList');
 const listTamplate = `<header class="list-header panel-default panel">
-      <div class="list-name">New List</div>
-      <span class="caret">
-        <button class="del-list-btn">
-          Delete List
+      <div class="list-name">New-List</div>
+      <input type="text" class="hidden">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span class="caret"></span>
         </button>
-      </span>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+          <li><a href="#">Delete List</a></li>
+        </ul>
+      </div>
     </header>
     <div class="main-column">
-      <ul class="cards-list"></ul>
+      <ul class="cards-list">
+        <li>
+          card
+        </li>
+        <li>
+          card
+        </li>
+        <li>
+          card
+        </li>
+      </ul>
     </div>
     <footer>
       <button class="add-card btn btn-default">
@@ -17,20 +30,20 @@ const listTamplate = `<header class="list-header panel-default panel">
       </button>
     </footer>`;
 
-btn.addEventListener('click', addList);
+addListBtn.addEventListener('click', addList);
 addListenerToAddCard();
-titels();
-addListenerToEditBtn();
+addListenerToListName();
+addListenerToDrop();
 
 function addList() {
   const wraper = document.getElementById('contflex');
   const newColumn = document.createElement('div');
   newColumn.innerHTML = listTamplate;
   newColumn.setAttribute('class', 'column');
-  wraper.insertBefore(newColumn, btn);
+  wraper.insertBefore(newColumn, addListBtn);
   addListenerToAddCard();
-  titels();
-  addListenerToEditBtn();
+  addListenerToListName();
+  addListenerToDrop();
 }
 
 function addListenerToAddCard() {
@@ -48,7 +61,7 @@ function addCard() {
   parentElm.appendChild(newLi);
 }
 
-function titels() {
+function addListenerToListName() {
   const getListNameElms = document.getElementsByClassName('list-name');
 
   for (let listName of getListNameElms) {
@@ -59,64 +72,61 @@ function titels() {
 function editName() {
   const target = event.target;
   const preText = target.textContent;
-  const papa = target.parentNode;
-  const newInput = document.createElement('input');
-  papa.replaceChild(newInput, target);
-  newInput.value = preText;
-  newInput.focus();
+  const showInput = target.parentNode.querySelector('.hidden');
+  showInput.className = '';
+  target.className = 'hidden';
+  showInput.value = preText;
+  showInput.focus();
 
-  newInput.addEventListener('keydown', (event) => {
+  showInput.addEventListener('keydown', (event) => {
     if (event.keyCode === 13) {
-      const mama = document.createElement('div');
-      const newTitle = event.target;
-      papa.replaceChild(mama, newTitle);
-      mama.textContent = newTitle.value;
-      mama.addEventListener('click', editName);
-      mama.className='list-name';
+      target.className = 'list-name';
+      showInput.className = 'hidden';
+      target.textContent = showInput.value;
     }
   });
 
-  newInput.addEventListener('blur', (event) => {
-    const mama = document.createElement('div');
-    const newTitle = event.target;
-    papa.replaceChild(mama, newTitle);
-    mama.textContent = newTitle.value;
-    mama.addEventListener('click', editName);
-    mama.className='list-name';
-  })
+  showInput.addEventListener('blur', (event) => {
+    target.className = 'list-name';
+    showInput.className = 'hidden';
+    target.textContent = showInput.value;
+  });
+  addListenerToListName();
+  addListenerToDrop()
 }
 
-function addListenerToEditBtn() {
-  const makeEditBtnArray = document.querySelectorAll('.column header span');
+function addListenerToDrop() {
+  const makeEditBtnArray = document.querySelectorAll('.dropdown-toggle');
   for (let v of makeEditBtnArray) {
-    v.addEventListener('click', openDeleteBtn)
+    v.addEventListener('click', openDeleteBtn);
   }
 }
 
 function openDeleteBtn() {
-  const editBtn = event.target;
-  const delListBtn = editBtn.querySelector('button');
+  const target = event.target;
+console.info(target);
+  const dropdownMenu = target.parentNode.querySelector('.dropdown-menu');
 
-  if (delListBtn.style.display !== 'block') {
-    delListBtn.style.display = 'block'
+  if (dropdownMenu.style.display !== 'block') {
+    dropdownMenu.style.display = 'block';
+    const deleteBtn = dropdownMenu.firstElementChild.firstElementChild;
+    const listStr = target.parentNode.parentNode.querySelector('.list-name').textContent;
+    console.info(listStr);
+    deleteBtn.addEventListener('click', (event) => {
+      const confirmDel = confirm('Deleting ' + listStr + ' list. Are you sure?');
+      if (confirmDel === true) {
+        const Cya = target.parentNode.parentNode.parentNode;
+        Cya.remove()
+      }
+      else {}
+      deleteBtn.addEventListener('blur', (event) => {
+        dropdownMenu.style.display = 'none'
+      })
+    })
   }
   else {
-    delListBtn.style.display = 'none'
+    dropdownMenu.style.display = 'none'
   }
-  delListBtn.addEventListener('click', (event) => {
-    const target = event.target;
-    const promptDel = confirm('Deleting TODO list. Are you sure?');
-    if (promptDel === true) {
-      const EE = target.parentNode.parentNode.parentNode;
-      console.info(EE);
-      EE.remove()
-    }
-    else {
-    }
-    delListBtn.addEventListener('blur', (event) => {
-      delListBtn.style.display = 'none'
-    })
-  })
 }
 
 

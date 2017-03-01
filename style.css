@@ -7,7 +7,6 @@ body {
 }
 
 body {
-padding-top: 95px;
   box-sizing: border-box;
 }
 
@@ -20,63 +19,44 @@ padding-top: 95px;
 
 /*======= top bar =========*/
 
-body > header {
-  height: 50px;
-  position: fixed;
-  top: 0;
+.navbar-default {
+  position: relative;
+  top:0;
   left: 0;
-  right: 0;
-  margin: 0;
-display: inline-flex;
-  justify-content: flex-start;
-  flex-direction: row;
-  border: 1px solid black;
+
 }
 
-.logo{
+
+.navbar-brand{
   width: 35px;
   height: 35px;
   padding: 1px;
   z-index: 1;
 }
 
-header nav ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: inline-flex;
-  align-items: flex-start;
-  justify-content: space-around;
-  height: 100%;
-}
 
-header nav ul li {
-  height: 100%;
-  width: 120px;
-  justify-content: center;
-}
 
 .contflex {
-
-  max-height: 100%;
+  max-height: calc(100% - 50px);
   padding: 15px 10px;
   display: inline-flex;
   align-items: flex-start;
   justify-content: space-around;
-
 }
 
 .column {
-  max-height: calc(100% - 80px);
+  max-height: calc(100% - 50px);
+  /*height: 100%;*/
   width: 250px;
   position: relative;
-  margin: 8px 10px;
+  margin: 20px 10px;
+
   /*display: block;*/
 }
 
 .main-column {
 
-  max-height: calc(100vh - 180px);
+  max-height: calc(100vh - 150px);
   text-align: center;
   border: solid 1px #000000;
   overflow: auto;
@@ -84,10 +64,11 @@ header nav ul li {
 }
 
 
-.column header {
+.column .list-header {
   position: absolute;
-  bottom: 100%;
+  top:-25px;
   left: 0;
+  right: 0;
   text-align: left;
   width: 100%;
   background-color: #E7E7E7;
@@ -95,46 +76,47 @@ header nav ul li {
   border: 1px solid #2c2c2c;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  height: 50px;
+height: 45px;
   padding: 3px 5px;
 }
 
-.column header span {
-  border: 1px solid #434343;
-  height: 10px;
-  width: 15px;
+.hidden {
+  display: none;
+}
+
+.dropdown {
   position: absolute;
   top: 5px;
   right: 5px;
-  /*border-radius: 3px;*/
-  /*padding: 2px 4px;*/
 }
+
 .list-name {
   background-color: #E7E7E7;
   /*vertical-align: middle;*/
   width: 70%;
+  font-weight: bolder;
 }
 
 .panel-heading {
   margin: 0;
 }
 
-.del-list-btn {
-  display: none;
-  position: absolute;
-  top: 100%;
-  /*left: -30px;*/
-  right: 0;
-}
+/*.del-list-addListBtn {*/
+  /*display: none;*/
+  /*position: absolute;*/
+  /*top: 100%;*/
+  /*!*left: -30px;*!*/
+  /*right: 0;*/
+/*}*/
 
-.del-list-btn:hover {
-  background-color: #b80004;
-  color: white;
-}
+/*.del-list-addListBtn:hover {*/
+  /*background-color: #b80004;*/
+  /*color: white;*/
+/*}*/
 
 .column footer {
   position: relative;
-  top: 100%;
+  bottom: 0;
   left: 0;
   right: 0;
   text-align: center;
@@ -145,26 +127,26 @@ header nav ul li {
   border-bottom-right-radius: 5px;
 }
 
-.column ul {
+.column .main-column ul {
   list-style: none;
-  margin: 0;
+  margin: 25px 0 0 0;
   padding: 0;
 }
 
-.column ul li {
-  background-color: #ffd570;
-  margin: 3px ;
-  padding: 5px;
-  height: 120px;
+.column .main-column ul li {
+  /*background-color: #ffd570;*/
+  margin: 5px 3px ;
+  padding: 5px 3px;
+  border: 1px solid #c0c0c0;
 }
 
-.add-list {
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-top: -35px;
-  padding: 10px 80px;
-  text-align: center;
-}
+/*.add-list {*/
+  /*margin-left: 20px;*/
+  /*margin-right: 20px;*/
+  /*margin-top: -35px;*/
+  /*padding: 10px 80px;*/
+  /*text-align: center;*/
+/*}*/
 
 .add-card {
   width: 100%;

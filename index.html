@@ -3,34 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <title>Task Board</title>
-  <!--<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">-->
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-<header>
-  <a class="logo" href="#">
-    <img src="assets/taskboard%20logo.svg" alt="">
-  </a>
-  <nav>
-    <ul>
-      <li>Board</li>
-      <li>Members</li>
+<nav class="navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">
+        <img src="assets/taskboard%20logo.svg" alt="logo">
+      </a>
+    </div>
+    <ul class="nav nav-tabs">
+      <li role="presentation" class="active"><a href="#">Board</a></li>
+      <li role="presentation"><a href="#">Members</a></li>
     </ul>
-  </nav>
-</header>
+  </div>
+</nav>
 
 <main class="contflex" id="contflex">
 
   <div class="column">
     <header class="list-header panel-default panel">
       <div class="list-name">Back-Log</div>
-      <span class="caret">
-
-        <button class="del-list-btn">
-          Delete List
+      <input type="text" class="hidden">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span class="caret"></span>
         </button>
-      </span>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+          <li><a href="#">Delete List</a></li>
+        </ul>
+      </div>
+    </header>
+    <div class="main-column">
+      <ul class="cards-list">
+        <li class="card">
+          <header><span class="glyphicon glyphicon-pencil">Edit</span></header>
+          <div><p contenteditable="true">ha ha ha</p></div>
+          <footer>ffot</footer>
+        </li>
+        <li>
+          card
+        </li>
+        <li>
+          card
+        </li>
+      </ul>
+    </div>
+    <footer>
+      <button class="add-card btn btn-default">
+        Add a Card
+      </button>
+    </footer>
+  </div>
+  <div class="column">
+    <header class="list-header panel-default panel">
+      <div class="list-name">Back-Log</div>
+      <input type="text" class="hidden">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+          <li><a href="#">Delete List</a></li>
+        </ul>
+      </div>
     </header>
     <div class="main-column">
       <ul class="cards-list">
@@ -53,69 +92,16 @@
   </div>
   <div class="column">
     <header class="list-header panel-default panel">
-      <div class="list-name">To Do</div>
-      <span class="caret">
-        <button class="del-list-btn">
-          Delete List
+      <div class="list-name">Back-Log</div>
+      <input type="text" class="hidden">
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span class="caret"></span>
         </button>
-      </span>
-    </header>
-    <div class="main-column">
-      <ul class="cards-list">
-        <li>
-          card
-        </li>
-        <li>
-          card
-        </li>
-        <li>
-          card
-        </li>
-      </ul>
-    </div>
-    <footer>
-      <button class="add-card btn btn-default">
-        Add a Card
-      </button>
-    </footer>
-  </div>
-  <div class="column">
-    <header class="list-header panel-default panel">
-      <div class="list-name">In Progress</div>
-      <span class="caret">
-        <button class="del-list-btn">
-          Delete List
-        </button>
-      </span>
-    </header>
-    <div class="main-column">
-      <ul class="cards-list">
-        <li>
-          card
-        </li>
-        <li>
-          card
-        </li>
-        <li>
-          card
-        </li>
-      </ul>
-    </div>
-    <footer>
-      <button class="add-card btn btn-default">
-        Add a Card
-      </button>
-    </footer>
-  </div>
-  <div class="column">
-    <header class="list-header panel-default panel">
-      <div class="list-name">Done</div>
-      <span class="caret">
-
-        <button class="del-list-btn">
-          Delete List
-        </button>
-      </span>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+          <li><a href="#">Delete List</a></li>
+        </ul>
+      </div>
     </header>
     <div class="main-column">
       <ul class="cards-list">
