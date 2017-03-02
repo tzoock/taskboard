@@ -1,6 +1,9 @@
 const addListBtn = document.getElementById('addList');
-const listTamplate = ` <div class="list-header panel-heading">
-      <div class="list-name panel-title">Back-Log</div>
+addListBtn.addEventListener('click', addList);
+
+const listTamplate = `
+<div class="list-header panel-heading">
+      <div class="list-name panel-title">New List</div>
       <input type="text" class="hidden">
       <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
@@ -17,27 +20,28 @@ const listTamplate = ` <div class="list-header panel-heading">
       
       </ul>
     </div>
-    <div class="panel-footer add-card">
+    <div class="add-card panel-footer">
       Add a Card
     </div>`;
 
-const cardTemplate = ` <button type="button" class="btn btn-primary btn-xs pull-right">Edit</button>
-          <div>
-            <p contenteditable="true">
-              ha ha ha
-            </p>
-          </div>
-          <div class="card-footer">
-            <span class="label label-primary">FU</span>
-            <span class="label label-primary">MT</span>
-          </div>`;
+const cardTemplate = `
+<button type="button" class="btn btn-primary btn-xs pull-right">
+  Edit
+</button>
+<p>
+  ha ha ha
+</p>
+<div class="card-footer">
+  <span class="label label-primary">FU</span>
+  <span class="label label-primary">MT</span>
+</div>`;
 
-addListBtn.addEventListener('click', addList);
-addListenerToAddCard();
+// addListenerToAddCard();
 addListenerToListName();
 addListenerToDrop();
 
-function addList() {
+function addList(data) {
+
   const wraper = document.getElementById('contflex');
   const newColumn = document.createElement('div');
   newColumn.innerHTML = listTamplate;
@@ -46,24 +50,37 @@ function addList() {
   addListenerToAddCard();
   addListenerToListName();
   addListenerToDrop();
+
+  if (data) {
+
+    newColumn.querySelector('.list-name').textContent = data.title;
+    const papa = newColumn.querySelector('.cards-list');
+    for (let task of data.tasks) {
+      addCard(task, papa);
+      addListenerToAddCard()
+    }
+  }
 }
 
 function addListenerToAddCard() {
   let addCardBtn = document.querySelectorAll(".add-card");
   for (let i = 0; i < addCardBtn.length; i++) {
-    addCardBtn[i].addEventListener("click", addCard);
+    addCardBtn[i].addEventListener("click", addCard());
   }
 }
 
-function addCard() {
-  console.info(event.target);
+function addCard(data) {
   const newLi = document.createElement('li');
-  newLi.innerHTML = cardTemplate;
-  newLi.className= 'card list-group-item';
-  const parentElm = event.target.parentNode.querySelector('.cards-list');
-  console.info(newLi);
-  console.info(parentElm);
-  parentElm.appendChild(newLi);
+    // console.info(event);
+    const target = event.target;
+    const parentElm = target.parentNode.querySelector('.cards-list');
+    parentElm.appendChild(newLi);
+    newLi.className = 'card list-group-item';
+    newLi.innerHTML = cardTemplate;
+
+  if (data) {
+    newLi.querySelector('div > p').textContent = data.text;
+  }
 }
 
 function addListenerToListName() {
@@ -109,7 +126,7 @@ function addListenerToDrop() {
 
 function openDeleteBtn() {
   const target = event.target;
-console.info(target);
+  console.info(target);
   const dropdownMenu = target.parentNode.querySelector('.dropdown-menu');
 
   if (dropdownMenu.style.display !== 'block') {
@@ -123,7 +140,8 @@ console.info(target);
         const Cya = target.parentNode.parentNode.parentNode;
         Cya.remove()
       }
-      else {}
+      else {
+      }
       deleteBtn.addEventListener('blur', (event) => {
         dropdownMenu.style.display = 'none'
       })
@@ -135,6 +153,19 @@ console.info(target);
 }
 
 
+function reqListener(event) {
+  const target = event.target.response;
+  // console.info(target);
+  const data = JSON.parse(target);
+  for (let board of data.board) {
+    addList(board);
+  }
 
+}
+
+const oReq = new XMLHttpRequest();
+oReq.addEventListener("load", reqListener);
+oReq.open("GET", "assets/board.json");
+oReq.send();
 
 
