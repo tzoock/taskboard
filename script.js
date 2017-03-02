@@ -1,34 +1,36 @@
 const addListBtn = document.getElementById('addList');
-const listTamplate = `<header class="list-header panel-default panel">
-      <div class="list-name">New-List</div>
+const listTamplate = ` <div class="list-header panel-heading">
+      <div class="list-name panel-title">Back-Log</div>
       <input type="text" class="hidden">
       <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="true">
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
           <li><a href="#">Delete List</a></li>
         </ul>
       </div>
-    </header>
-    <div class="main-column">
-      <ul class="cards-list">
-        <li>
-          card
-        </li>
-        <li>
-          card
-        </li>
-        <li>
-          card
-        </li>
+    </div>
+    <div class="main-column panel-body">
+      <ul class="cards-list list-group">
+      
       </ul>
     </div>
-    <footer>
-      <button class="add-card btn btn-default">
-        Add a Card
-      </button>
-    </footer>`;
+    <div class="panel-footer add-card">
+      Add a Card
+    </div>`;
+
+const cardTemplate = ` <button type="button" class="btn btn-primary btn-xs pull-right">Edit</button>
+          <div>
+            <p contenteditable="true">
+              ha ha ha
+            </p>
+          </div>
+          <div class="card-footer">
+            <span class="label label-primary">FU</span>
+            <span class="label label-primary">MT</span>
+          </div>`;
 
 addListBtn.addEventListener('click', addList);
 addListenerToAddCard();
@@ -39,7 +41,7 @@ function addList() {
   const wraper = document.getElementById('contflex');
   const newColumn = document.createElement('div');
   newColumn.innerHTML = listTamplate;
-  newColumn.setAttribute('class', 'column');
+  newColumn.setAttribute('class', 'column panel panel-default');
   wraper.insertBefore(newColumn, addListBtn);
   addListenerToAddCard();
   addListenerToListName();
@@ -49,15 +51,18 @@ function addList() {
 function addListenerToAddCard() {
   let addCardBtn = document.querySelectorAll(".add-card");
   for (let i = 0; i < addCardBtn.length; i++) {
-    addCardBtn[i].addEventListener("click", addCard)
+    addCardBtn[i].addEventListener("click", addCard);
   }
 }
 
 function addCard() {
+  console.info(event.target);
   const newLi = document.createElement('li');
-  newLi.textContent = 'new card';
-  const findPapa = event.target.parentNode.previousSibling.previousSibling;
-  const parentElm = findPapa.querySelector('.cards-list');
+  newLi.innerHTML = cardTemplate;
+  newLi.className= 'card list-group-item';
+  const parentElm = event.target.parentNode.querySelector('.cards-list');
+  console.info(newLi);
+  console.info(parentElm);
   parentElm.appendChild(newLi);
 }
 
