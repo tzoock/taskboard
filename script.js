@@ -1,34 +1,36 @@
 const addListBtn = document.getElementById('addList');
 addListBtn.addEventListener('click', addList);
 
-const listTamplate = `
-<div class="list-header panel-heading">
-      <div class="list-name panel-title">New List</div>
-      <input type="text" class="hidden">
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="true">
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-          <li><a href="#">Delete List</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="main-column panel-body">
-      <ul class="cards-list list-group">
-      
-      </ul>
-    </div>
-    <div class="add-card panel-footer">
-      Add a Card
-    </div>`;
+const listTemplate = `<div class="list-header panel-heading">
+  <div class="list-name panel-title">
+    New-List
+  </div>
+  <input type="text" class="hidden">
+  <div class="dropdown">
+    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="true">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+      <li>
+        <a href="#">
+          Delete List
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="main-column panel-body">
+  <ul class="cards-list list-group">
+  </ul>
+</div>
+<div class="add-card panel-footer">Add a Card
+</div>`;
 
-const cardTemplate = `
-<button type="button" class="btn btn-primary btn-xs pull-right">
+const cardTemplate = `<button type="button" class="btn btn-primary btn-xs pull-right">
   Edit
 </button>
-<p>
+<p class="card-text">
   ha ha ha
 </p>
 <div class="card-footer">
@@ -37,57 +39,47 @@ const cardTemplate = `
 </div>`;
 
 // addListenerToAddCard();
-addListenerToListName();
-addListenerToDrop();
+// addListenerToListName();
+// addListenerToDrop();
 
-function addList(data) {
-
-  const wraper = document.getElementById('contflex');
+function addList(board) {
+  const wrapper = document.getElementById('contflex');
   const newColumn = document.createElement('div');
-  newColumn.innerHTML = listTamplate;
+  newColumn.innerHTML = listTemplate;
   newColumn.setAttribute('class', 'column panel panel-default');
-  wraper.insertBefore(newColumn, addListBtn);
-  addListenerToAddCard();
-  addListenerToListName();
-  addListenerToDrop();
+  wrapper.insertBefore(newColumn, addListBtn);
+  const getCardBtn = newColumn.lastElementChild;
+  getCardBtn.addEventListener('click', addCard);
+  const listName = newColumn.querySelector('.list-name');
+  listName.addEventListener('click', editName);
+  const dropdownToggle = newColumn.querySelectorAll('.dropdown-toggle');
+  console.info(dropdownToggle);
+  dropdownToggle.addEventListener('click', openDeleteBtn);
+  // addListenerToDrop();
 
-  if (data) {
-
-    newColumn.querySelector('.list-name').textContent = data.title;
-    const papa = newColumn.querySelector('.cards-list');
-    for (let task of data.tasks) {
+  if (board) {
+    newColumn.querySelector('.list-name').textContent = board.title;
+    const tasks = board.tasks;
+    for (let task of tasks) {
+      const papa = newColumn.querySelector('.cards-list');
       addCard(task, papa);
-      addListenerToAddCard()
     }
   }
 }
 
-function addListenerToAddCard() {
-  let addCardBtn = document.querySelectorAll(".add-card");
-  for (let i = 0; i < addCardBtn.length; i++) {
-    addCardBtn[i].addEventListener("click", addCard());
-  }
-}
+function addCard(task, papa) {
 
-function addCard(data) {
   const newLi = document.createElement('li');
-    // console.info(event);
-    const target = event.target;
-    const parentElm = target.parentNode.querySelector('.cards-list');
-    parentElm.appendChild(newLi);
-    newLi.className = 'card list-group-item';
-    newLi.innerHTML = cardTemplate;
-
-  if (data) {
-    newLi.querySelector('div > p').textContent = data.text;
+  newLi.className = 'card list-group-item';
+  newLi.innerHTML = cardTemplate;
+  if (task && papa) {
+    papa.appendChild(newLi);
+    newLi.querySelector('.card-text').textContent = task.text;
   }
-}
-
-function addListenerToListName() {
-  const getListNameElms = document.getElementsByClassName('list-name');
-
-  for (let listName of getListNameElms) {
-    listName.addEventListener('click', editName);
+  else {
+    const cardList = event.target.parentNode.querySelector('.main-column > ul');
+    console.info(cardList);
+    cardList.appendChild(newLi);
   }
 }
 
@@ -117,23 +109,14 @@ function editName() {
   addListenerToDrop()
 }
 
-function addListenerToDrop() {
-  const makeEditBtnArray = document.querySelectorAll('.dropdown-toggle');
-  for (let v of makeEditBtnArray) {
-    v.addEventListener('click', openDeleteBtn);
-  }
-}
-
 function openDeleteBtn() {
-  const target = event.target;
-  console.info(target);
-  const dropdownMenu = target.parentNode.querySelector('.dropdown-menu');
+  // const target = event.target;
+  // const dropdownMenu = target.parentNode.querySelector('.dropdown-menu');
 
   if (dropdownMenu.style.display !== 'block') {
     dropdownMenu.style.display = 'block';
     const deleteBtn = dropdownMenu.firstElementChild.firstElementChild;
     const listStr = target.parentNode.parentNode.querySelector('.list-name').textContent;
-    console.info(listStr);
     deleteBtn.addEventListener('click', (event) => {
       const confirmDel = confirm('Deleting ' + listStr + ' list. Are you sure?');
       if (confirmDel === true) {
@@ -155,7 +138,6 @@ function openDeleteBtn() {
 
 function reqListener(event) {
   const target = event.target.response;
-  // console.info(target);
   const data = JSON.parse(target);
   for (let board of data.board) {
     addList(board);
