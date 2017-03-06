@@ -39,40 +39,35 @@ body {
 .contflex {
   max-height: calc(100% - 50px);
   padding: 15px 10px;
-  display: inline-flex;
-  align-items: flex-start;
-  justify-content: space-around;
+
 }
+
+/*.my-members {*/
+  /*display: none;*/
+  /*max-height: calc(100% - 50px);*/
+  /*padding: 15px 10px;*/
+
+/*}*/
+
+/*.my-board {*/
+  /*max-height: calc(100% - 50px);*/
+  /*padding: 0;*/
+  /*display: inline-flex;*/
+  /*align-items: flex-start;*/
+  /*justify-content: space-around;*/
+/*}*/
 
 .column {
   max-height: calc(100% - 50px);
-  /*height: 100%;*/
-  width: 250px;
+  width: 300px;
   position: relative;
   margin: 20px 10px;
-
-  /*display: block;*/
 }
 
 .main-column {
-
   max-height: calc(100vh - 200px);
   text-align: center;
   overflow: auto;
-  /*background-color: #726a85;*/
-}
-
-
-.list-header {
-
-  /*border-top-left-radius: 5px;*/
-  /*border-top-right-radius: 5px;*/
-/*height: 45px;*/
-  /*padding: 3px 5px;*/
-}
-
-.hidden {
-  display: none;
 }
 
 .dropdown {
@@ -82,8 +77,6 @@ body {
 }
 
 .list-name {
-
-  /*vertical-align: middle;*/
   width: 70%;
   font-weight: bolder;
 }
@@ -91,19 +84,6 @@ body {
 .panel-heading {
   margin: 0;
 }
-
-/*.del-list-addListBtn {*/
-  /*display: none;*/
-  /*position: absolute;*/
-  /*top: 100%;*/
-  /*!*left: -30px;*!*/
-  /*right: 0;*/
-/*}*/
-
-/*.del-list-addListBtn:hover {*/
-  /*background-color: #b80004;*/
-  /*color: white;*/
-/*}*/
 
 .column footer {
   position: relative;
@@ -118,31 +98,6 @@ body {
   border-bottom-right-radius: 5px;
 }
 
-/*.column .main-column ul {*/
-  /*list-style: none;*/
-  /*margin: 25px 0 0 0;*/
-  /*padding: 0;*/
-/*}*/
-
-/*.column .main-column ul li {*/
-  /*!*background-color: #ffd570;*!*/
-  /*margin: 5px 3px ;*/
-  /*padding: 5px 3px;*/
-  /*border: 1px solid #c0c0c0;*/
-/*}*/
-
-/*.add-list {*/
-  /*margin-left: 20px;*/
-  /*margin-right: 20px;*/
-  /*margin-top: -35px;*/
-  /*padding: 10px 80px;*/
-  /*text-align: center;*/
-/*}*/
-
-/*.add-card {*/
-  /*width: 100%;*/
-/*}*/
-
 .panel-footer:hover {
   cursor: pointer;
 }
@@ -154,11 +109,90 @@ body {
   margin: 10px 0;
 }
 
-.btn-primary {
-  display: none;
+.card-text {
+  padding: 15px 5px;
 }
-.card:hover > .btn-primary {
+
+.my-ed-btn {
+  display: none;
+  position: absolute;
+  right: 5px;
+}
+.card:hover > .my-ed-btn {
   display: block;
 }
 
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+}
 
+.card-footer span {
+  margin-left: 2px;
+}
+
+.memlist {
+  list-style: none;
+  padding: 0;
+}
+
+.modal-content {
+  text-align: initial;
+  padding: 3px;
+}
+
+.hold-mem {
+  max-height: 80px;
+  overflow: auto;
+  margin-left: 15px;
+}
+
+.my-ins-delbtn {
+  margin-left: 15px;
+}
+
+.modal {
+  background-color: rgba(0,0,0,0.5);
+}
+
+.board-stuff {
+  display: none;
+  /*display: inline-flex;*/
+  align-items: flex-start;
+  justify-content: space-around;
+}
+
+.members-stuff {
+  /*display: none;*/
+}
+
+.mem-head {
+  display: block;
+}
+
+.add-mem-input {
+  display: inline-block;
+  width: 300px;
+}
+
+.member {
+  font-weight: bold;
+}
+
+.mem-list {
+  width: 600px;
+}
+.mem-name input{
+  display: inline-block;
+  width: 300px;
+}
+
+.mem-btns {
+  display: inline-block;
+  position: relative;
+  left: 20%;
+}
+
+.mem-edit {
+  display: none;
+}
