@@ -188,11 +188,21 @@ body {
 }
 
 .mem-btns {
-  display: inline-block;
+  display: none;
   position: relative;
   left: 20%;
 }
 
-.mem-edit {
+.mem-edit-btns,
+.inp-name {
+  display: none;
+}
+
+.member:hover .mem-btns {
+  display: inline-block;
+}
+
+.edit-mode .mem-btns,
+.edit-mode .mem-name {
   display: none;
 }

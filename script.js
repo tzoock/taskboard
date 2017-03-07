@@ -44,7 +44,18 @@ const cardTemplate = `<button type="button" class="my-ed-btn btn btn-primary btn
 <div class="card-footer">
 </div>`;
 
-
+const memberTemplate = `<label for="inp-name" class="mem-name">
+        New Member
+      </label>
+      <input type="text" class="form-control inp-name" id="inp-name">
+      <div class="mem-btns">
+        <button type="button" class="btn btn-info btn-xs">Edit</button>
+        <button type="button" class="btn btn-danger btn-xs">Delete</button>
+      </div>
+      <div class="mem-edit-btns">
+        <button type="button" class="btn btn-default btn-xs">Cancel</button>
+        <button type="button" class="btn btn-success btn-xs">Save</button>
+      </div>`;
 // const boardTab = document.querySelector('.my-board');
 // const membersTab = document.querySelector('.my-members');
 // boardTab.addEventListener("click", switchTab);
@@ -186,12 +197,19 @@ function openDeleteBtn() {
   }
 }
 
-function memberialia(members) {
+function memberialia(data) {
+  console.info(data);
   const mainMembers = document.querySelector('.members-stuff');
   console.info(mainMembers);
-  const memList = mainMembers.querySelector('.mem-list');
+  const memList = document.createElement('ul');
+  memList.innerHTML = `<ul class="list-group mem-list">
+</ul>`;
   console.info(memList);
   const addMember = memList.querySelector('.add-member');
+  const newMember = document.createElement('li');
+  newMember.innerHTML = memberTemplate;
+  newMember.className = 'list-group-item member';
+  memList.appendChild(newMember);
 }
 
 function reqListener(event) {
@@ -206,9 +224,9 @@ function reqListener(event) {
 function reqMembersListener(event) {
 
   const target = event.target.response;
-  console.info(target);
+
   const data = JSON.parse(target);
-  console.info(data);
+
  memberialia(data)
 }
 
