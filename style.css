@@ -39,6 +39,9 @@ body {
 .contflex {
   max-height: calc(100% - 50px);
   padding: 15px 10px;
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: space-around;
 
 }
 
@@ -155,16 +158,14 @@ body {
   background-color: rgba(0,0,0,0.5);
 }
 
-.board-stuff {
-  display: none;
-  /*display: inline-flex;*/
-  align-items: flex-start;
-  justify-content: space-around;
-}
-
-.members-stuff {
+/*.board-stuff {*/
   /*display: none;*/
-}
+
+/*}*/
+
+/*.members-stuff {*/
+  /*!*display: none;*!*/
+/*}*/
 
 .mem-head {
   display: block;

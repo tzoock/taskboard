@@ -56,10 +56,17 @@ const memberTemplate = `<label for="inp-name" class="mem-name">
         <button type="button" class="btn btn-default btn-xs">Cancel</button>
         <button type="button" class="btn btn-success btn-xs">Save</button>
       </div>`;
-// const boardTab = document.querySelector('.my-board');
-// const membersTab = document.querySelector('.my-members');
-// boardTab.addEventListener("click", switchTab);
-// membersTab.addEventListener("click", switchTab);
+
+const tabsNav = document.querySelector('.nav-tabs');
+tabsNav.addEventListener('click', (event) => {
+  const target = event.target;
+  if (target.textContent === 'Board') {
+    target.closest('.nav-tabs').querySelector()
+  }
+
+  console.info(target.closest('.nav-tabs'));
+  target.closest('.nav-tabs')
+});
 
 // function switchTab() {
 //   const target = event.target;
@@ -198,13 +205,13 @@ function openDeleteBtn() {
 }
 
 function memberialia(data) {
-  console.info(data);
+  // console.info(data);
   const mainMembers = document.querySelector('.members-stuff');
-  console.info(mainMembers);
+  // console.info(mainMembers);
   const memList = document.createElement('ul');
   memList.innerHTML = `<ul class="list-group mem-list">
 </ul>`;
-  console.info(memList);
+  // console.info(memList);
   const addMember = memList.querySelector('.add-member');
   const newMember = document.createElement('li');
   newMember.innerHTML = memberTemplate;
@@ -212,7 +219,7 @@ function memberialia(data) {
   memList.appendChild(newMember);
 }
 
-function reqListener(event) {
+function reqBoardListener(event) {
 
   const target = event.target.response;
   const data = JSON.parse(target);
@@ -222,20 +229,32 @@ function reqListener(event) {
 }
 
 function reqMembersListener(event) {
-
   const target = event.target.response;
-
   const data = JSON.parse(target);
-
  memberialia(data)
 }
 
-const oReq = new XMLHttpRequest();
-oReq.addEventListener("load", reqListener);
-oReq.open("GET", "assets/board.json");
-oReq.send();
+function initBoard() {
+  const oReq = new XMLHttpRequest();
+  oReq.addEventListener("load", reqBoardListener);
+  oReq.open("GET", "assets/board.json");
+  oReq.send();
+}
 
-const mReq = new XMLHttpRequest();
-mReq.addEventListener("load", reqMembersListener);
-mReq.open("GET", "assets/members.json");
-mReq.send();
+function initMember () {
+  const mReq = new XMLHttpRequest();
+  mReq.addEventListener("load", reqMembersListener);
+  mReq.open("GET", "assets/members.json");
+  mReq.send();
+}
+
+window.addEventListener('hashchange', (event) => {
+  // console.log(window.location.hash);
+  // console.info(event.target);
+  if (window.location.hash.includes('#members')) {
+    initMember()
+  }
+  if (window.location.hash.includes('#board')) {
+    initBoard()
+  }
+});
