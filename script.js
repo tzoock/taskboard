@@ -1,39 +1,85 @@
-const addListBtn = document.getElementById('addList');
-addListBtn.addEventListener('click', function () {
-  const emptyList = {
-    "title": "New List",
-    "tasks": []
-  };
+const mainContent = document.getElementById('mainContent');
 
-  addList(emptyList);
+const appData = {
+  lists: [],
+  members: []
+};
 
+
+window.addEventListener('hashchange', (event) => {
+  initPageByHash();
 });
 
-const listTemplate = `<div class="list-header panel-heading">
-  <div class="list-name panel-title">
-    New-List
+function initPageByHash() {
+
+
+
+  if (window.location.hash === '') {
+    window.location.hash = '#board';
+  }
+
+  if (window.location.hash === '#board') {
+    const addListBtn = document.createElement('button');
+    addListBtn.className = 'add-list btn-default btn';
+    addListBtn.id = 'addList';
+    addListBtn.textContent = 'Add List';
+    mainContent.innerHTML = addListBtn.outerHTML;
+    addListBtn.addEventListener('click', addList);
+
+    const targetTab = document.querySelector(".my-board");
+    targetTab.className = "my-board active";
+    targetTab.parentNode.querySelector('.my-members').classList.remove('active');
+
+    for (const list of appData.lists) {
+      addList(list);
+    }
+  }
+
+  if (window.location.hash === '#members') {
+    mainContent.innerHTML = membersTemplate;
+
+    const targetTab = document.querySelector(".my-members");
+    targetTab.className = "my-members active";
+    targetTab.parentNode.querySelector('.my-board').classList.remove('active');
+    for (const member of appData.members) {
+      initMembers(member);
+    }
+
+  }
+}
+
+// function getListByTitle(title, list) {
+//   console.info(appData.lists.title);
+//   appData.lists.forEach(function(list) {
+//     console.log(list.title);
+//   });
+// }
+const listTemplate = `
+  <div class="list-header panel-heading">
+    <div class="list-name panel-title">
+      New-List
+    </div>
+    <input type="text" class="hidden">
+    <div class="dropdown">
+      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="true">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li>
+          <a href="#">
+            Delete List
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
-  <input type="text" class="hidden">
-  <div class="dropdown">
-    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="true">
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-      <li>
-        <a href="#">
-          Delete List
-        </a>
-      </li>
+  <div class="main-column panel-body">
+    <ul class="cards-list list-group">
     </ul>
   </div>
-</div>
-<div class="main-column panel-body">
-  <ul class="cards-list list-group">
-  </ul>
-</div>
-<div class="add-card panel-footer">Add a Card
-</div>`;
+  <div class="add-card panel-footer">Add a Card</div>
+`;
 
 const cardTemplate = `<button type="button" class="my-ed-btn btn btn-primary btn-xs">
   Edit
@@ -43,6 +89,14 @@ const cardTemplate = `<button type="button" class="my-ed-btn btn btn-primary btn
 </p>
 <div class="card-footer">
 </div>`;
+
+const membersTemplate = ` <div><h2 class="mem-head">Taskboard Members</h2>
+  <ul class="list-group mem-list">
+    <li class="list-group-item add-member">
+        <input type="text" class="add-mem-input form-control" placeholder="Add New Member">
+      <button class="add-mem btn btn-primary">Add</button>
+    </li>
+  </ul> </div>`;
 
 const memberTemplate = `<label for="inp-name" class="mem-name">
         New Member
@@ -57,48 +111,29 @@ const memberTemplate = `<label for="inp-name" class="mem-name">
         <button type="button" class="btn btn-success btn-xs">Save</button>
       </div>`;
 
-const tabsNav = document.querySelector('.nav-tabs');
-tabsNav.addEventListener('click', (event) => {
-  const target = event.target;
-  if (target.textContent === 'Board') {
-    target.closest('.nav-tabs').querySelector()
-  }
 
-  console.info(target.closest('.nav-tabs'));
-  target.closest('.nav-tabs')
-});
 
-// function switchTab() {
-//   const target = event.target;
-//   if (target.textContent === 'Board') {
-//     boardTab.className = '"my-board active';
-//     membersTab.className = 'my-members';
-//
-//   }
-//   if (target.textContent === 'Members') {
-//     boardTab.className = '"my-board';
-//     membersTab.className = 'my-members active';
-//   }
-//
-// }
 function addList(list) {
-  const wrapper = document.getElementById('contflex');
+
+  const addListBtn = mainContent.querySelector('.add-list');
   const newColumn = document.createElement('div');
   newColumn.innerHTML = listTemplate;
   newColumn.querySelector('.list-name').textContent = 'New-List';
   newColumn.setAttribute('class', 'column panel panel-default');
-  wrapper.insertBefore(newColumn, addListBtn);
+  mainContent.insertBefore(newColumn, addListBtn);
   const getCardBtn = newColumn.lastElementChild;
   getCardBtn.addEventListener('click', addCard);
   const listName = newColumn.querySelector('.list-name');
   listName.addEventListener('click', editName);
   const dropdownToggle = newColumn.querySelector('.dropdown-toggle');
   dropdownToggle.addEventListener('click', openDeleteBtn);
-
   newColumn.querySelector('.list-name').textContent = list.title;
+
   const tasks = list.tasks;
+
+  const papa = newColumn.querySelector('.cards-list');
+
   for (const task of tasks) {
-    const papa = newColumn.querySelector('.cards-list');
     addCard(task, papa);
   }
 }
@@ -152,10 +187,13 @@ function openModal() {
   }
 }
 
-function editName() {
+function editName(event) {
   const target = event.target;
+  console.info('target',target);
   const preText = target.textContent;
+  console.info('preText', preText);
   const showInput = target.parentNode.querySelector('.hidden');
+console.info('showInput', showInput);
   showInput.className = '';
   target.className = 'hidden';
   showInput.value = preText;
@@ -179,59 +217,86 @@ function editName() {
   }
 }
 
-function openDeleteBtn() {
+function openDeleteBtn(event) {
   const target = event.target;
-  const dropdownMenu = target.parentNode.querySelector('.dropdown-menu');
+  const dropdownMenu = target.closest('.dropdown').querySelector('.dropdown-menu');
+
   if (dropdownMenu.style.display !== 'block') {
     dropdownMenu.style.display = 'block';
+
     const deleteBtn = dropdownMenu.firstElementChild.firstElementChild;
-    const listStr = target.parentNode.parentNode.querySelector('.list-name').textContent;
-    deleteBtn.addEventListener('click', (deleteList));
+    const listStr = target.closest('.list-header').querySelector('.list-name').textContent;
 
     function deleteList() {
-      const confirmDel = confirm('Deleting ' + listStr + ' list. Are you sure?');
+      const confirmDel = window.confirm('Deleting ' + listStr + ' list. Are you sure?');
+
       if (confirmDel === true) {
-        const Cya = target.parentNode.parentNode.parentNode;
-        Cya.remove()
+        const columElm = target.closest('.column');
+        columElm.remove();
       }
       else {
         dropdownMenu.style.display = 'none'
       }
     }
+
+    deleteBtn.addEventListener('click', deleteList);
   }
   else {
     dropdownMenu.style.display = 'none'
   }
 }
 
-function memberialia(data) {
-  // console.info(data);
-  const mainMembers = document.querySelector('.members-stuff');
-  // console.info(mainMembers);
-  const memList = document.createElement('ul');
-  memList.innerHTML = `<ul class="list-group mem-list">
-</ul>`;
-  // console.info(memList);
-  const addMember = memList.querySelector('.add-member');
+function initMembers(member) {
+  console.info(member);
+  const addMember = document.querySelector('.add-member');
+  const memList = document.querySelector('.mem-list');
   const newMember = document.createElement('li');
   newMember.innerHTML = memberTemplate;
   newMember.className = 'list-group-item member';
-  memList.appendChild(newMember);
+  newMember.querySelector('.mem-name').textContent = member.name;
+  memList.insertBefore(newMember, addMember);
+
+
+
+
+  addMember.addEventListener('click', (event) => {
+    console.info(event.target);
+    const newMember = document.createElement('li');
+    newMember.innerHTML = memberTemplate;
+    newMember.className = 'list-group-item member';
+
+  })
+}
+
+function isAllDataReady() {
+  if (appData.lists.length && appData.members.length) {
+    return true
+  }
+  else {
+    return false
+  }
 }
 
 function reqBoardListener(event) {
-
   const target = event.target.response;
+  // console.info(target);
   const data = JSON.parse(target);
-  for (const list of data.board) {
-    addList(list);
+
+  appData.lists = data.board;
+  if (isAllDataReady()) {
+    initPageByHash();
   }
 }
 
 function reqMembersListener(event) {
   const target = event.target.response;
   const data = JSON.parse(target);
- memberialia(data)
+
+  appData.members = data.members;
+
+  if (isAllDataReady()) {
+    initPageByHash();
+  }
 }
 
 function initBoard() {
@@ -241,20 +306,14 @@ function initBoard() {
   oReq.send();
 }
 
-function initMember () {
+function initMember() {
   const mReq = new XMLHttpRequest();
   mReq.addEventListener("load", reqMembersListener);
   mReq.open("GET", "assets/members.json");
   mReq.send();
 }
 
-window.addEventListener('hashchange', (event) => {
-  // console.log(window.location.hash);
-  // console.info(event.target);
-  if (window.location.hash.includes('#members')) {
-    initMember()
-  }
-  if (window.location.hash.includes('#board')) {
-    initBoard()
-  }
-});
+
+console.info(appData);
+initBoard();
+initMember();
