@@ -51,19 +51,19 @@ function initPageByHash() {
 }
 
 
-// function getListByTitle() {
-//   const colArr = document.querySelectorAll('.column');
-//   colArr.forEach((title) => {
-//     const colTitle = title.querySelector('.list-name');
-//     appData.lists.forEach((dataList, index) => {
-//       let dataListTitle = dataList.title;
-//       console.info(dataListTitle, index);
-//       if (colTitle.textContent === dataListTitle) {
-//         console.info(colTitle);
-//       }
-//     });
-//   });
-// }
+function getListByTitle() {
+  const colArr = document.querySelectorAll('.column');
+  colArr.forEach((title) => {
+    const colTitle = title.querySelector('.list-name');
+    appData.lists.forEach((dataList, index) => {
+      let dataListTitle = dataList.title;
+      console.info(dataListTitle, index);
+      if (colTitle.textContent === dataListTitle) {
+        console.info(colTitle);
+      }
+    });
+  });
+}
 
 
 const listTemplate = `
@@ -232,16 +232,25 @@ function enterInp() {
     target.className = 'hidden';
 
 
-    appData.lists.forEach((list, index) => {
-      const curIndex = index;
-      console.info(list);
-      console.info(index);
-      console.info(preText);
-      console.info(target.value);
-      if (target.value !== preText) {
-        appData.lists[curIndex].title = target.value
+
+    appData.lists.forEach((dataList, index) => {
+
+      let dataListTitle = dataList.title;
+      console.info(dataListTitle, index);
+      if (colTitle.textContent === dataListTitle) {
+        console.info(colTitle);
       }
     });
+    // appData.lists.forEach((list, index) => {
+    //   const curIndex = index;
+    //   console.info(list);
+    //   console.info(index);
+    //   console.info(preText);
+    //   console.info(target.value);
+    //   if (target.value !== preText) {
+    //     appData.lists[curIndex].title = target.value
+    //   }
+    // });
   }
 
 }
