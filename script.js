@@ -12,27 +12,27 @@ window.addEventListener('hashchange', (event) => {
 
 function initPageByHash() {
 
-
-
   if (window.location.hash === '') {
     window.location.hash = '#board';
   }
 
   if (window.location.hash === '#board') {
+    const targetTab = document.querySelector(".my-board");
+    targetTab.className = "my-board active";
+    targetTab.parentNode.querySelector('.my-members').classList.remove('active');
+
     const addListBtn = document.createElement('button');
     addListBtn.className = 'add-list btn-default btn';
     addListBtn.id = 'addList';
     addListBtn.textContent = 'Add List';
     mainContent.innerHTML = addListBtn.outerHTML;
-    addListBtn.addEventListener('click', addList);
-
-    const targetTab = document.querySelector(".my-board");
-    targetTab.className = "my-board active";
-    targetTab.parentNode.querySelector('.my-members').classList.remove('active');
 
     for (const list of appData.lists) {
       addList(list);
     }
+    const addListBtnClick = mainContent.querySelector('.add-list');
+    addListBtnClick.addEventListener('click', addList);
+
   }
 
   if (window.location.hash === '#members') {
@@ -46,18 +46,29 @@ function initPageByHash() {
     }
 
   }
+
+  // getListByTitle()
 }
 
-// function getListByTitle(title, list) {
-//   console.info(appData.lists.title);
-//   appData.lists.forEach(function(list) {
-//     console.log(list.title);
+
+// function getListByTitle() {
+//   const colArr = document.querySelectorAll('.column');
+//   colArr.forEach((title) => {
+//     const colTitle = title.querySelector('.list-name');
+//     appData.lists.forEach((dataList, index) => {
+//       let dataListTitle = dataList.title;
+//       console.info(dataListTitle, index);
+//       if (colTitle.textContent === dataListTitle) {
+//         console.info(colTitle);
+//       }
+//     });
 //   });
 // }
+
+
 const listTemplate = `
   <div class="list-header panel-heading">
-    <div class="list-name panel-title">
-      New-List
+    <div class="list-name panel-title">New List
     </div>
     <input type="text" class="hidden">
     <div class="dropdown">
@@ -112,30 +123,36 @@ const memberTemplate = `<label for="inp-name" class="mem-name">
       </div>`;
 
 
-
 function addList(list) {
 
   const addListBtn = mainContent.querySelector('.add-list');
   const newColumn = document.createElement('div');
   newColumn.innerHTML = listTemplate;
-  newColumn.querySelector('.list-name').textContent = 'New-List';
   newColumn.setAttribute('class', 'column panel panel-default');
   mainContent.insertBefore(newColumn, addListBtn);
-  const getCardBtn = newColumn.lastElementChild;
-  getCardBtn.addEventListener('click', addCard);
+
   const listName = newColumn.querySelector('.list-name');
   listName.addEventListener('click', editName);
+
+  const getCardBtn = newColumn.lastElementChild;
+  getCardBtn.addEventListener('click', addCard);
+
   const dropdownToggle = newColumn.querySelector('.dropdown-toggle');
   dropdownToggle.addEventListener('click', openDeleteBtn);
-  newColumn.querySelector('.list-name').textContent = list.title;
 
-  const tasks = list.tasks;
-
-  const papa = newColumn.querySelector('.cards-list');
-
-  for (const task of tasks) {
-    addCard(task, papa);
+  if (list.type === 'click') {
+    appData.lists.push(newColumn)
   }
+
+  if (list.type === undefined) {
+    newColumn.querySelector('.list-name').textContent = list.title;
+    const papa = newColumn.querySelector('.cards-list');
+    for (const task of list.tasks) {
+      addCard(task, papa);
+    }
+  }
+
+
 }
 
 function addCard(task, papa) {
@@ -189,11 +206,11 @@ function openModal() {
 
 function editName(event) {
   const target = event.target;
-  console.info('target',target);
+  // console.info('target', target);
   const preText = target.textContent;
-  console.info('preText', preText);
+  // console.info('preText', preText);
   const showInput = target.parentNode.querySelector('.hidden');
-console.info('showInput', showInput);
+  // console.info('showInput', showInput);
   showInput.className = '';
   target.className = 'hidden';
   showInput.value = preText;
@@ -202,19 +219,40 @@ console.info('showInput', showInput);
   showInput.addEventListener('keydown', enterInp);
   showInput.addEventListener('blur', blurInp);
 
-  function enterInp() {
-    if (event.keyCode === 13) {
-      target.className = 'list-name';
-      showInput.className = 'hidden';
-      target.textContent = showInput.value;
-    }
+}
+
+function enterInp() {
+  const target = event.target;
+  const showInput = target.parentNode.querySelector('.hidden');
+  // const preText = target.parentNode
+
+  if (event.keyCode === 13) {
+    const preText = showInput.textContent;
+    showInput.textContent = target.value;
+    target.className = 'hidden';
+
+
+    appData.lists.forEach((list, index) => {
+      const curIndex = index;
+      console.info(list);
+      console.info(index);
+      console.info(preText);
+      console.info(target.value);
+      if (target.value !== preText) {
+        appData.lists[curIndex].title = target.value
+      }
+    });
   }
 
-  function blurInp() {
-    target.className = 'list-name';
-    showInput.className = 'hidden';
-    target.textContent = showInput.value;
-  }
+}
+
+function blurInp() {
+  const target = event.target;
+  const showInput = target.parentNode.querySelector('.hidden');
+  console.info(target);
+  target.className = 'hidden';
+  showInput.className = 'list-name panel-title';
+  target.textContent = showInput.value;
 }
 
 function openDeleteBtn(event) {
@@ -233,6 +271,12 @@ function openDeleteBtn(event) {
       if (confirmDel === true) {
         const columElm = target.closest('.column');
         columElm.remove();
+        appData.lists.forEach((item) => {
+          let index = appData.lists.indexOf(item);
+          if (listStr === item.title) {
+            appData.lists.splice(index, 1)
+          }
+        })
       }
       else {
         dropdownMenu.style.display = 'none'
@@ -247,7 +291,6 @@ function openDeleteBtn(event) {
 }
 
 function initMembers(member) {
-  console.info(member);
   const addMember = document.querySelector('.add-member');
   const memList = document.querySelector('.mem-list');
   const newMember = document.createElement('li');
@@ -255,8 +298,6 @@ function initMembers(member) {
   newMember.className = 'list-group-item member';
   newMember.querySelector('.mem-name').textContent = member.name;
   memList.insertBefore(newMember, addMember);
-
-
 
 
   addMember.addEventListener('click', (event) => {
@@ -283,6 +324,7 @@ function reqBoardListener(event) {
   const data = JSON.parse(target);
 
   appData.lists = data.board;
+
   if (isAllDataReady()) {
     initPageByHash();
   }
