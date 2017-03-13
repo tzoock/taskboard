@@ -195,9 +195,14 @@ body {
   right: 10px;
 }
 
-.mem-edit-btns,
+.mem-inEdit-btns {
+  position: absolute;
+  right: 10px;
+  top: 18px;
+}
+
 .inp-name {
-  display: none;
+ width: 50%;
 }
 
 .member:hover .mem-btns {

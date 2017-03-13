@@ -36,6 +36,10 @@ function initPageByHash() {
 
   if (window.location.hash === '#members') {
 
+    const targetTab = document.querySelector(".my-members");
+    targetTab.className = "my-members active";
+    targetTab.parentNode.querySelector('.my-board').classList.remove('active');
+
     const membersTemplate = ` <div>
  <h2 class="mem-head">Taskboard Members</h2>
   <ul class="list-group mem-list">
@@ -49,26 +53,32 @@ function initPageByHash() {
 
     mainContent.innerHTML = membersTemplate;
 
-    const targetTab = document.querySelector(".my-members");
-    targetTab.className = "my-members active";
-    targetTab.parentNode.querySelector('.my-board').classList.remove('active');
+    const addMember = document.querySelector('.add-mem');
+
+    addMember.addEventListener('click', addNewMember);
+
     for (const member of appData.members) {
       initMembers(member);
     }
   }
+
 }
 
-const memberTemplate = `<label for="inp-name" class="mem-name">
-        New Member
-      </label>
-      <input type="text" class="form-control inp-name" id="inp-name">
-      <div class="mem-btns">
-        <button type="button" class="btn btn-info btn-xs">Edit</button>
-        <button type="button" class="btn btn-danger btn-xs">Delete</button>
-      </div>
-      <div class="mem-edit-btns">
-        <button type="button" class="btn btn-default btn-xs">Cancel</button>
-        <button type="button" class="btn btn-success btn-xs">Save</button>
+const memberTemplate = `<div class="mem-content">
+        <label for="inp-name" class="mem-name">
+          New Member
+        </label>
+        <div class="mem-btns">
+          <button type="button" class="edit-mem-btn btn btn-info btn-xs">Edit</button>
+          <button type="button" class="delete-mem btn btn-danger btn-xs">Delete</button>
+        </div>
+    </div>
+      <div class="hidden mem-inEdit">
+        <input type="text" class="form-control inp-name" id="inp-name">
+        <div class="mem-inEdit-btns">
+          <button type="button" class="cancel-mem btn btn-default btn-xs">Cancel</button>
+          <button type="button" class="save-mem btn btn-success btn-xs">Save</button>
+        </div>
       </div>`;
 
 
@@ -287,17 +297,20 @@ function openDeleteBtn(event) {
 }
 
 function initMembers(member) {
-  const addMember = document.querySelector('.add-mem');
+
   const memList = document.querySelector('.mem-list');
+
   const newMember = document.createElement('li');
-
-  addMember.addEventListener('click', addNewMember) ;
-
   newMember.innerHTML = memberTemplate;
   newMember.className = 'list-group-item member';
   newMember.querySelector('.mem-name').textContent = member.name;
   newMember.setAttribute('uuid', member.id);
   memList.appendChild(newMember);
+
+
+  const editMemberBtn = newMember.querySelector('.edit-mem-btn');
+  editMemberBtn.addEventListener('click', editMember);
+
 }
 
 function addNewMember() {
@@ -305,7 +318,35 @@ function addNewMember() {
   const clickNewMember = document.createElement('li');
   clickNewMember.innerHTML = memberTemplate;
   clickNewMember.className = 'list-group-item member';
+  clickNewMember.setAttribute('uuid', uuid.v4());
   memList.appendChild(clickNewMember);
+clickNewMember.addEventListener('click', editMember);
+}
+
+function editMember() {
+  const target = event.target;
+  const currentLiElm = target.closest('.member');
+  const memContent = currentLiElm.querySelector('.mem-content');
+  const memInEdit = currentLiElm.querySelector('.mem-inEdit');
+  const cancelEdit = currentLiElm.querySelector('.cancel-mem');
+  const saveMemberBtn = currentLiElm.querySelector('.save-mem');
+  
+  saveMemberBtn.addEventListener('click', saveMember);
+  
+  //=====togglers====
+  
+  cancelEdit.addEventListener('click', (event) => {
+    memContent.classList.toggle('hidden');
+    memInEdit.classList.toggle('hidden');
+  });
+  
+  memContent.classList.toggle('hidden');
+  memInEdit.classList.toggle('hidden');
+
+}
+
+function saveMember() {
+  console.info(event.target);
 }
 
 function isAllDataReady() {
