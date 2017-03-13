@@ -5,7 +5,6 @@ const appData = {
   members: []
 };
 
-
 window.addEventListener('hashchange', (event) => {
   initPageByHash();
 });
@@ -30,12 +29,24 @@ function initPageByHash() {
     for (const list of appData.lists) {
       addList(list);
     }
+
     const addListBtnClick = mainContent.querySelector('.add-list');
     addListBtnClick.addEventListener('click', addList);
-
   }
 
   if (window.location.hash === '#members') {
+
+    const membersTemplate = ` <div>
+ <h2 class="mem-head">Taskboard Members</h2>
+  <ul class="list-group mem-list">
+    
+  </ul>
+   <div class="list-group-item add-member">
+        <input type="text" class="add-mem-input form-control" placeholder="Add New Member">
+      <button class="add-mem btn btn-primary">Add</button>
+    </div>
+   </div>`;
+
     mainContent.innerHTML = membersTemplate;
 
     const targetTab = document.querySelector(".my-members");
@@ -44,70 +55,8 @@ function initPageByHash() {
     for (const member of appData.members) {
       initMembers(member);
     }
-
   }
-
-  // getListByTitle()
 }
-
-
-function getListByTitle() {
-  const colArr = document.querySelectorAll('.column');
-  colArr.forEach((title) => {
-    const colTitle = title.querySelector('.list-name');
-    appData.lists.forEach((dataList, index) => {
-      let dataListTitle = dataList.title;
-      console.info(dataListTitle, index);
-      if (colTitle.textContent === dataListTitle) {
-        console.info(colTitle);
-      }
-    });
-  });
-}
-
-
-const listTemplate = `
-  <div class="list-header panel-heading">
-    <div class="list-name panel-title">New List
-    </div>
-    <input type="text" class="hidden">
-    <div class="dropdown">
-      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="true">
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <li>
-          <a href="#">
-            Delete List
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div class="main-column panel-body">
-    <ul class="cards-list list-group">
-    </ul>
-  </div>
-  <div class="add-card panel-footer">Add a Card</div>
-`;
-
-const cardTemplate = `<button type="button" class="my-ed-btn btn btn-primary btn-xs">
-  Edit
-</button>
-<p class="card-text">
-  ha ha ha
-</p>
-<div class="card-footer">
-</div>`;
-
-const membersTemplate = ` <div><h2 class="mem-head">Taskboard Members</h2>
-  <ul class="list-group mem-list">
-    <li class="list-group-item add-member">
-        <input type="text" class="add-mem-input form-control" placeholder="Add New Member">
-      <button class="add-mem btn btn-primary">Add</button>
-    </li>
-  </ul> </div>`;
 
 const memberTemplate = `<label for="inp-name" class="mem-name">
         New Member
@@ -125,6 +74,22 @@ const memberTemplate = `<label for="inp-name" class="mem-name">
 
 function addList(list) {
 
+  const listTemplate = `<div class="list-header panel-heading">
+    <div class="list-name panel-title">New List
+    </div>
+    <input type="text" class="hidden">
+<div class="dropdown">
+      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="true">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li>
+          <a href="#">Delete List</a>
+        </li>
+      </ul>
+    </div></div><div class="main-column panel-body"><ul class="cards-list list-group"></ul></div><div class="add-card panel-footer">Add a Card</div>`;
+
   const addListBtn = mainContent.querySelector('.add-list');
   const newColumn = document.createElement('div');
   newColumn.innerHTML = listTemplate;
@@ -141,7 +106,13 @@ function addList(list) {
   dropdownToggle.addEventListener('click', openDeleteBtn);
 
   if (list.type === 'click') {
-    appData.lists.push(newColumn)
+    const newList = {
+      id: uuid.v4(),
+      tasks: [],
+      title: listName.textContent
+    };
+    appData.lists.push(newList);
+    console.info(appData.lists);
   }
 
   if (list.type === undefined) {
@@ -156,11 +127,20 @@ function addList(list) {
 }
 
 function addCard(task, papa) {
+  const target = event.target;
+
+  const cardTemplate = `<button type="button" class="my-ed-btn btn btn-primary btn-xs">
+  Edit
+</button>
+<p class="card-text">
+  Empty Card 
+</p>
+<div class="card-footer">
+</div>`;
 
   const newLi = document.createElement('li');
   newLi.className = 'card list-group-item';
   newLi.innerHTML = cardTemplate;
-
   const edBtn = newLi.querySelector('.btn-primary');
   edBtn.addEventListener('click', openModal);
 
@@ -186,13 +166,28 @@ function addCard(task, papa) {
   else {
     const cardList = event.target.parentNode.querySelector('.main-column > ul');
     cardList.appendChild(newLi);
+    newLi.setAttribute('uuId', uuid.v4());
+    const currntListTitle = target.closest('.column').querySelector('.list-name').textContent;
+    const emptyCardText = newLi.querySelector('.card-text').textContent;
+    const emptyCardMembers = newLi.querySelector('.card-footer').querySelectorAll('span');
+
+    appData.lists.forEach((list) => {
+
+      if (list.title === currntListTitle) {
+        const emptyCard = {
+          text: emptyCardText,
+          members: emptyCardMembers,
+        };
+        list.tasks.push(emptyCard);
+
+      }
+    });
   }
 }
 
 function openModal() {
   const target = event.target;
-  const main = target.closest('body');
-  const modal = main.querySelector(".modal");
+  const modal = target.closest('body').querySelector(".modal");
   modal.style.display = 'block';
   const card = target.closest('.card');
   const closeBtn = modal.querySelectorAll('.my-close-btn');
@@ -224,33 +219,18 @@ function editName(event) {
 function enterInp() {
   const target = event.target;
   const showInput = target.parentNode.querySelector('.hidden');
-  // const preText = target.parentNode
+
 
   if (event.keyCode === 13) {
     const preText = showInput.textContent;
     showInput.textContent = target.value;
     target.className = 'hidden';
 
-
-
-    appData.lists.forEach((dataList, index) => {
-
-      let dataListTitle = dataList.title;
-      console.info(dataListTitle, index);
-      if (colTitle.textContent === dataListTitle) {
-        console.info(colTitle);
+    appData.lists.forEach((list, index) => {
+      if (list.title === preText) {
+        appData.lists[index].title = target.value
       }
     });
-    // appData.lists.forEach((list, index) => {
-    //   const curIndex = index;
-    //   console.info(list);
-    //   console.info(index);
-    //   console.info(preText);
-    //   console.info(target.value);
-    //   if (target.value !== preText) {
-    //     appData.lists[curIndex].title = target.value
-    //   }
-    // });
   }
 
 }
@@ -258,10 +238,17 @@ function enterInp() {
 function blurInp() {
   const target = event.target;
   const showInput = target.parentNode.querySelector('.hidden');
-  console.info(target);
+  const preText = showInput.textContent;
+  showInput.textContent = target.value;
   target.className = 'hidden';
   showInput.className = 'list-name panel-title';
-  target.textContent = showInput.value;
+
+  appData.lists.forEach((list, index) => {
+
+    if (list.title === preText) {
+      appData.lists[index].title = target.value
+    }
+  });
 }
 
 function openDeleteBtn(event) {
@@ -300,22 +287,25 @@ function openDeleteBtn(event) {
 }
 
 function initMembers(member) {
-  const addMember = document.querySelector('.add-member');
+  const addMember = document.querySelector('.add-mem');
   const memList = document.querySelector('.mem-list');
   const newMember = document.createElement('li');
+
+  addMember.addEventListener('click', addNewMember) ;
+
   newMember.innerHTML = memberTemplate;
   newMember.className = 'list-group-item member';
   newMember.querySelector('.mem-name').textContent = member.name;
-  memList.insertBefore(newMember, addMember);
+  newMember.setAttribute('uuid', member.id);
+  memList.appendChild(newMember);
+}
 
-
-  addMember.addEventListener('click', (event) => {
-    console.info(event.target);
-    const newMember = document.createElement('li');
-    newMember.innerHTML = memberTemplate;
-    newMember.className = 'list-group-item member';
-
-  })
+function addNewMember() {
+  const memList = document.querySelector('.mem-list');
+  const clickNewMember = document.createElement('li');
+  clickNewMember.innerHTML = memberTemplate;
+  clickNewMember.className = 'list-group-item member';
+  memList.appendChild(clickNewMember);
 }
 
 function isAllDataReady() {
@@ -365,6 +355,21 @@ function initMember() {
 }
 
 
-console.info(appData);
+// function getListByTitle() {
+//   const colArr = document.querySelectorAll('.column');
+//   colArr.forEach((title) => {
+//     const colTitle = title.querySelector('.list-name');
+//     appData.lists.forEach((dataList, index) => {
+//       let dataListTitle = dataList.title;
+//       console.info(dataListTitle, index);
+//       if (colTitle.textContent === dataListTitle) {
+//         console.info(colTitle);
+//       }
+//     });
+//   });
+// }
+
+
 initBoard();
 initMember();
+console.info(appData);

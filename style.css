@@ -134,10 +134,7 @@ body {
   margin-left: 2px;
 }
 
-.memlist {
-  list-style: none;
-  padding: 0;
-}
+
 
 .modal-content {
   text-align: initial;
@@ -182,7 +179,11 @@ body {
 
 .mem-list {
   width: 600px;
+  margin: 0;
+  list-style: none;
+  padding: 0;
 }
+
 .mem-name input{
   display: inline-block;
   width: 300px;
@@ -190,8 +191,8 @@ body {
 
 .mem-btns {
   display: none;
-  position: relative;
-  left: 20%;
+  position: absolute;
+  right: 10px;
 }
 
 .mem-edit-btns,
