@@ -110,6 +110,7 @@ body {
 
 .card {
   margin: 10px 0;
+  border: 1px solid #1535e6;
 }
 
 .card-text {

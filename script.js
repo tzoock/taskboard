@@ -1,9 +1,37 @@
 const mainContent = document.getElementById('mainContent');
 
+
+/**
+ * @AppData handlers
+ */
 const appData = {
   lists: [],
   members: []
 };
+
+function updateMemberName(memberId, memName) {
+  appData.members.forEach((member) => {
+    if (memberId === member.id) {
+      member.name = memName;
+    }
+  })
+}
+
+function updateDeleteMember(memberId) {
+  appData.members.forEach((member, index) => {
+    if (memberId === member.id) {
+      appData.members.splice(index, 1)
+    }
+  })
+}
+
+function updateNewMember(memberId, memberName) {
+  const newMember = {
+    "id": memberId,
+    "name": memberName
+  };
+  appData.members.push(newMember)
+}
 
 window.addEventListener('hashchange', (event) => {
   initPageByHash();
@@ -155,6 +183,7 @@ function addCard(task, papa) {
   edBtn.addEventListener('click', openModal);
 
   if (task && papa) {
+    newLi.setAttribute('uuid', task.id)
     papa.appendChild(newLi);
     newLi.querySelector('.card-text').textContent = task.text;
     const cardFoote = newLi.querySelector(".card-footer");
@@ -196,10 +225,105 @@ function addCard(task, papa) {
 }
 
 function openModal() {
+
+  const modalTamplate = `<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="my-close-btn close" data-dismiss="modal" aria-label="Close"><span
+          aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit Card</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="edit-text" class="col-sm-2 control-label">Card Text</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" rows="3" id="edit-text"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="mem-checkbox" class="col-sm-2 control-label">Move to:</label>
+            <div class="col-sm-10">
+              <select class="form-control mem-checkbox" id="mem-checkbox">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+
+            <label for="memlist" class="col-sm-2 control-label">Members:</label>
+
+            <div class="col-sm-7 hold-mem panel panel-default">
+              <ul class="memlist" id="memlist">
+                <li>
+                  <label>
+                    <input type="checkbox">He Woman
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="checkbox">He Woman
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="checkbox">He Woman
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="checkbox">He Woman
+                  </label>
+                </li>
+                <li>
+                  <label>
+                    <input type="checkbox">She Man
+                  </label>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+          <div class="form-group">
+
+            <button type="button" class="my-ins-delbtn btn btn-danger">Delete Card</button>
+
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default my-close-btn" data-dismiss="modal">Close</button>
+        <button type="button" class="save-changes btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>`;
   const target = event.target;
-  const modal = target.closest('body').querySelector(".modal");
-  modal.style.display = 'block';
+  console.info(target);
+  const modal = document.createElement('div');
+  const body = document.querySelector('body');
   const card = target.closest('.card');
+const taskId = card.getAttribute('uuid');
+console.info(taskId);
+
+  body.appendChild(modal);
+  modal.className = 'modal';
+  modal.setAttribute('tabindex', '-1');
+  modal.setAttribute('role', 'dialog');
+  modal.innerHTML = modalTamplate;
+  modal.style.display = 'block';
+
+
+  const cardText = card.querySelector('.card-text').textContent;
+  const modalCardText = modal.querySelector('#edit-text');
+  modalCardText.value = cardText;
+
+  const saveBtn = modal.querySelector('.save-changes');
+  saveBtn.addEventListener('click')
+
   const closeBtn = modal.querySelectorAll('.my-close-btn');
   for (let x of closeBtn) {
     x.addEventListener("click", (event) => {
@@ -207,6 +331,7 @@ function openModal() {
       modalElm.style.display = 'none';
     });
   }
+
 }
 
 function editName(event) {
@@ -311,42 +436,88 @@ function initMembers(member) {
   const editMemberBtn = newMember.querySelector('.edit-mem-btn');
   editMemberBtn.addEventListener('click', editMember);
 
+  const deleteMemberBtn = newMember.querySelector('.delete-mem');
+  deleteMemberBtn.addEventListener('click', deleteMember)
 }
 
 function addNewMember() {
+
   const memList = document.querySelector('.mem-list');
   const clickNewMember = document.createElement('li');
+
   clickNewMember.innerHTML = memberTemplate;
   clickNewMember.className = 'list-group-item member';
   clickNewMember.setAttribute('uuid', uuid.v4());
   memList.appendChild(clickNewMember);
-clickNewMember.addEventListener('click', editMember);
+
+  const editMemberBtn = clickNewMember.querySelector('.edit-mem-btn');
+  editMemberBtn.addEventListener('click', editMember);
+
+  const deleteMemberBtn = clickNewMember.querySelector('.delete-mem');
+  deleteMemberBtn.addEventListener('click', deleteMember);
+
+  const memberName = clickNewMember.querySelector('.mem-name').textContent;
+  const memberId = clickNewMember.getAttribute('uuid');
+
+  updateNewMember(memberId, memberName);
+
 }
 
 function editMember() {
+
+
   const target = event.target;
   const currentLiElm = target.closest('.member');
   const memContent = currentLiElm.querySelector('.mem-content');
   const memInEdit = currentLiElm.querySelector('.mem-inEdit');
   const cancelEdit = currentLiElm.querySelector('.cancel-mem');
   const saveMemberBtn = currentLiElm.querySelector('.save-mem');
-  
+  const inputMember = currentLiElm.querySelector('.inp-name');
+  const memberName = currentLiElm.querySelector('.mem-name');
+
+  inputMember.value = memberName.textContent;
+
   saveMemberBtn.addEventListener('click', saveMember);
-  
+
   //=====togglers====
-  
+
+  memContent.classList.toggle('hidden');
+  memInEdit.classList.toggle('hidden');
+
   cancelEdit.addEventListener('click', (event) => {
     memContent.classList.toggle('hidden');
     memInEdit.classList.toggle('hidden');
   });
-  
-  memContent.classList.toggle('hidden');
-  memInEdit.classList.toggle('hidden');
 
 }
 
 function saveMember() {
+  const target = event.target;
+  const currentLiElm = target.closest('.member');
+  const memContent = currentLiElm.querySelector('.mem-content');
+  const memInEdit = currentLiElm.querySelector('.mem-inEdit');
+  const inputMember = currentLiElm.querySelector('.inp-name');
+  const memberName = currentLiElm.querySelector('.mem-name');
+  const memberId = currentLiElm.getAttribute('uuid');
+  const memName = inputMember.value;
+  updateMemberName(memberId, memName);
+
+
+  memberName.textContent = inputMember.value;
+
+  memContent.classList.toggle('hidden');
+  memInEdit.classList.toggle('hidden');
+}
+
+function deleteMember() {
   console.info(event.target);
+  const target = event.target;
+  const currentLiElm = target.closest('.member');
+  const memberId = currentLiElm.getAttribute('uuid');
+
+  updateDeleteMember(memberId);
+
+  currentLiElm.remove()
 }
 
 function isAllDataReady() {
@@ -395,7 +566,9 @@ function initMember() {
   mReq.send();
 }
 
-
+/**
+ * testing
+ */
 // function getListByTitle() {
 //   const colArr = document.querySelectorAll('.column');
 //   colArr.forEach((title) => {
@@ -413,4 +586,4 @@ function initMember() {
 
 initBoard();
 initMember();
-console.info(appData);
+
