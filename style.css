@@ -156,6 +156,9 @@ body {
   background-color: rgba(0,0,0,0.5);
 }
 
+.memlist {
+  list-style: none;
+}
 /*.board-stuff {*/
   /*display: none;*/
 

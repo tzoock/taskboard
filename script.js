@@ -144,16 +144,21 @@ function addList(list) {
   dropdownToggle.addEventListener('click', openDeleteBtn);
 
   if (list.type === 'click') {
+    const uId = uuid.v4();
     const newList = {
-      id: uuid.v4(),
+      id: uId,
       tasks: [],
       title: listName.textContent
     };
+
     appData.lists.push(newList);
     console.info(appData.lists);
+
+    newColumn.setAttribute('uuid', uId);
   }
 
   if (list.type === undefined) {
+    newColumn.setAttribute('uuid', list.id);
     newColumn.querySelector('.list-name').textContent = list.title;
     const papa = newColumn.querySelector('.cards-list');
     for (const task of list.tasks) {
@@ -245,11 +250,6 @@ function openModal() {
             <label for="mem-checkbox" class="col-sm-2 control-label">Move to:</label>
             <div class="col-sm-10">
               <select class="form-control mem-checkbox" id="mem-checkbox">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
               </select>
             </div>
           </div>
@@ -259,31 +259,7 @@ function openModal() {
 
             <div class="col-sm-7 hold-mem panel panel-default">
               <ul class="memlist" id="memlist">
-                <li>
-                  <label>
-                    <input type="checkbox">He Woman
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox">He Woman
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox">He Woman
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox">He Woman
-                  </label>
-                </li>
-                <li>
-                  <label>
-                    <input type="checkbox">She Man
-                  </label>
-                </li>
+             
               </ul>
             </div>
 
@@ -302,12 +278,12 @@ function openModal() {
     </div>
   </div>`;
   const target = event.target;
-  console.info(target);
   const modal = document.createElement('div');
   const body = document.querySelector('body');
   const card = target.closest('.card');
-const taskId = card.getAttribute('uuid');
-console.info(taskId);
+  const list = target.closest('.column');
+  const taskId = card.getAttribute('uuid');
+  const listId = list.getAttribute('uuid');
 
   body.appendChild(modal);
   modal.className = 'modal';
@@ -315,23 +291,73 @@ console.info(taskId);
   modal.setAttribute('role', 'dialog');
   modal.innerHTML = modalTamplate;
   modal.style.display = 'block';
-
-
+  modal.setAttribute('taskId', taskId);
+  modal.setAttribute('listId', listId);
   const cardText = card.querySelector('.card-text').textContent;
   const modalCardText = modal.querySelector('#edit-text');
   modalCardText.value = cardText;
 
+  const modalMoveTo = modal.querySelector('#mem-checkbox');
+  appData.lists.forEach((list) => {
+    const newOption = document.createElement('option');
+    newOption.textContent = list.title;
+    modalMoveTo.appendChild(newOption)
+  });
+
+  const modalMembers = modal.querySelector('#memlist');
+  appData.members.forEach((member) => {
+    const newLi = document.createElement('li');
+    const tamplete = `
+<label>
+  <input type="checkbox">
+  </label>
+`;
+    newLi.innerHTML = tamplete;
+    const nameHere = newLi.querySelector('label');
+    nameHere.textContent = member.name;
+    // const newMem = document.createElement('label');
+    // const newCheckbox = document.createElement('input');
+    // newCheckbox.setAttribute('type', 'checkbox');
+    // newMem.appendChild(newCheckbox);
+    // newMem.textContent = member.name;
+    // newLi.appendChild(newMem);
+    modalMembers.appendChild(newLi)
+  });
+
+
   const saveBtn = modal.querySelector('.save-changes');
-  saveBtn.addEventListener('click')
+  saveBtn.addEventListener('click', updateTask);
 
   const closeBtn = modal.querySelectorAll('.my-close-btn');
   for (let x of closeBtn) {
-    x.addEventListener("click", (event) => {
-      const modalElm = event.target.closest('.modal');
-      modalElm.style.display = 'none';
-    });
+    x.addEventListener("click", closeModal);
   }
+}
 
+function closeModal() {
+
+  const modalElm = event.target.closest('.modal');
+  modalElm.style.display = 'none';
+  initPageByHash()
+}
+
+function updateTask() {
+  const target = event.target;
+  const modalCardText = target.closest('.modal').querySelector('#edit-text');
+  const taskId = target.closest('.modal').getAttribute('taskId');
+  const listId = target.closest('.modal').getAttribute('listId');
+
+  appData.lists.forEach((list) => {
+    if (list.id === listId) {
+      list.tasks.forEach((task) => {
+        if (task.id === taskId) {
+          task.text = modalCardText.value;
+          console.info('im the one');
+          closeModal()
+        }
+      })
+    }
+  })
 }
 
 function editName(event) {
