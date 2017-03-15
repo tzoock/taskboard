@@ -229,6 +229,16 @@ function addCard(task, papa) {
   }
 }
 
+function getListById(id) {
+  let i = -1;
+  appData.lists.forEach((list, index) => {
+    if (list.id === id) {
+i = index
+    }
+  });
+  return i
+}
+
 function openModal() {
 
   const modalTamplate = `<div class="modal-dialog" role="document">
@@ -308,22 +318,24 @@ function openModal() {
   appData.members.forEach((member) => {
     const newLi = document.createElement('li');
     const tamplete = `
-<label>
+<label uuId="${member.id}">
   <input type="checkbox">
+  ${member.name}
   </label>
 `;
     newLi.innerHTML = tamplete;
-    const nameHere = newLi.querySelector('label');
-    nameHere.textContent = member.name;
-    // const newMem = document.createElement('label');
-    // const newCheckbox = document.createElement('input');
-    // newCheckbox.setAttribute('type', 'checkbox');
-    // newMem.appendChild(newCheckbox);
-    // newMem.textContent = member.name;
-    // newLi.appendChild(newMem);
-    modalMembers.appendChild(newLi)
+    console.info(member.id);
+    modalMembers.appendChild(newLi);
   });
+console.info(taskId);
 
+  appData.lists.forEach((task) => {
+    console.info(task.id);
+
+    if (task.id === taskId) {
+      console.info('yaaa');
+    }
+  });
 
   const saveBtn = modal.querySelector('.save-changes');
   saveBtn.addEventListener('click', updateTask);
@@ -332,6 +344,8 @@ function openModal() {
   for (let x of closeBtn) {
     x.addEventListener("click", closeModal);
   }
+
+  console.info(appData);
 }
 
 function closeModal() {
@@ -581,7 +595,7 @@ function reqMembersListener(event) {
 function initBoard() {
   const oReq = new XMLHttpRequest();
   oReq.addEventListener("load", reqBoardListener);
-  oReq.open("GET", "assets/board.json");
+  oReq.open("GET", "assets/board-advanced.json");
   oReq.send();
 }
 
