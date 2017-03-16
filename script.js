@@ -26,10 +26,10 @@ function updateDeleteMember(memberId) {
   })
 }
 
-function updateNewMember(memberId, memberName) {
+function updateNewMember(memberId) {
   const newMember = {
     "id": memberId,
-    "name": memberName
+    "name": 'New Member'
   };
   appData.members.push(newMember)
 }
@@ -84,7 +84,7 @@ function initPageByHash() {
 
     const addMember = document.querySelector('.add-mem');
 
-    addMember.addEventListener('click', addNewMember);
+    addMember.addEventListener('click', initMember);
 
     for (const member of appData.members) {
       initMembers(member);
@@ -214,14 +214,15 @@ function addCard(task, papa) {
     const cardList = event.target.parentNode.querySelector('.main-column > ul');
     cardList.appendChild(newLi);
     newLi.setAttribute('uuId', uuid.v4());
-    const currntListTitle = target.closest('.column').querySelector('.list-name').textContent;
+    const currntListId = target.closest('.column').getAttribute('uuid');
     const emptyCardText = newLi.querySelector('.card-text').textContent;
     const emptyCardMembers = newLi.querySelector('.card-footer').querySelectorAll('span');
-
+    const cardId = newLi.getAttribute('uuid');
     appData.lists.forEach((list) => {
 
-      if (list.title === currntListTitle) {
+      if (list.id === currntListId) {
         const emptyCard = {
+          id: cardId,
           text: emptyCardText,
           members: emptyCardMembers,
         };
@@ -399,15 +400,14 @@ function updateTask() {
           const resultArr = [];
           const membersToArray = membersList.querySelectorAll('input');
           membersToArray.forEach((input) => {
-            if (input.checked===true){
+            if (input.checked === true) {
               const memId = input.getAttribute('uuid');
               resultArr.push(memId);
-              
+
             }
 
           });
           task.members = resultArr;
-          console.info('im the one');
           closeModal()
         }
       })
@@ -417,7 +417,6 @@ function updateTask() {
 
 function editName(event) {
   const target = event.target;
-  // console.info('target', target);
   const preText = target.textContent;
   // console.info('preText', preText);
   const showInput = target.parentNode.querySelector('.hidden');
@@ -507,12 +506,23 @@ function initMembers(member) {
   const memList = document.querySelector('.mem-list');
 
   const newMember = document.createElement('li');
+
   newMember.innerHTML = memberTemplate;
+
   newMember.className = 'list-group-item member';
+
   newMember.querySelector('.mem-name').textContent = member.name;
   newMember.setAttribute('uuid', member.id);
   memList.appendChild(newMember);
 
+  if (typeof member === 'object') {
+
+  }
+  console.info(member);
+  if (!member) {
+    console.info(NewMember);
+    NewMember.setAttribute('uuid', uuid.v4());
+  }
 
   const editMemberBtn = newMember.querySelector('.edit-mem-btn');
   editMemberBtn.addEventListener('click', editMember);
@@ -524,10 +534,13 @@ function initMembers(member) {
 function addNewMember() {
 
   const memList = document.querySelector('.mem-list');
+
   const clickNewMember = document.createElement('li');
 
   clickNewMember.innerHTML = memberTemplate;
+
   clickNewMember.className = 'list-group-item member';
+
   clickNewMember.setAttribute('uuid', uuid.v4());
   memList.appendChild(clickNewMember);
 
@@ -537,10 +550,9 @@ function addNewMember() {
   const deleteMemberBtn = clickNewMember.querySelector('.delete-mem');
   deleteMemberBtn.addEventListener('click', deleteMember);
 
-  const memberName = clickNewMember.querySelector('.mem-name').textContent;
   const memberId = clickNewMember.getAttribute('uuid');
 
-  updateNewMember(memberId, memberName);
+  updateNewMember(memberId);
 
 }
 
@@ -561,10 +573,15 @@ function editMember() {
   saveMemberBtn.addEventListener('click', saveMember);
 
   //=====togglers====
+function togglers() {
+  memContent.classList.toggle('hidden');
+  memInEdit.classList.toggle('hidden');
+  inputMember.focus();
+}
 
   memContent.classList.toggle('hidden');
   memInEdit.classList.toggle('hidden');
-
+  inputMember.focus();
   cancelEdit.addEventListener('click', (event) => {
     memContent.classList.toggle('hidden');
     memInEdit.classList.toggle('hidden');
