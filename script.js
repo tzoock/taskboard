@@ -74,18 +74,21 @@ function initPageByHash() {
   <ul class="list-group mem-list">
     
   </ul>
-   <div class="list-group-item add-member">
-        <input type="text" class="add-mem-input form-control" placeholder="Add New Member">
+   <form type="submit" class="list-group-item add-member">
+        <input type="text" class="add-mem-input" placeholder="Add New Member">
       <button class="add-mem btn btn-primary">Add</button>
-    </div>
+    </form>
    </div>`;
 
     mainContent.innerHTML = membersTemplate;
 
-    const addMember = document.querySelector('.add-mem');
+    // const addMember = document.querySelector('.add-mem');
+    //
+    // addMember.addEventListener('click', initMembers);
 
-    addMember.addEventListener('click', initMembers);
+    const submitNewMember = document.querySelector('.add-member');
 
+    submitNewMember.addEventListener('submit', initMembers);
     for (const member of appData.members) {
       initMembers(member);
     }
@@ -512,19 +515,27 @@ function initMembers(member) {
   newMember.className = 'list-group-item member';
 
   newMember.querySelector('.mem-name').textContent = member.name;
-  newMember.setAttribute('uuid', member.id);
 
-  if (member.type==='click') {
-    console.info('uuu');
-    NewMember.setAttribute('uuid', uuid.v4());
+
+  if (member.type === 'submit') {
+    const membersFooter = event.target;
+    const footerInput = membersFooter.querySelector('input');
+    const newMemName = newMember.querySelector('.mem-name');
+    console.info(newMember);
+    newMember.setAttribute('uuid', uuid.v4());
+
+    newMemName.textContent = footerInput.value;
+    if (footerInput.value === '') {
+      newMemName.textContent = "New Member"
+    }
+    const memberId = newMember.getAttribute('uuid');
+    updateNewMember(memberId);
+    footerInput.value = ''
   }
 
   if (typeof member === 'object') {
-
+    newMember.setAttribute('uuid', member.id);
   }
-
-  console.info(newMember);
-
 
   memList.appendChild(newMember);
 
@@ -532,31 +543,7 @@ function initMembers(member) {
   editMemberBtn.addEventListener('click', editMember);
 
   const deleteMemberBtn = newMember.querySelector('.delete-mem');
-  deleteMemberBtn.addEventListener('click', deleteMember)
-}
-
-function addNewMember() {
-
-  const memList = document.querySelector('.mem-list');
-
-  const clickNewMember = document.createElement('li');
-
-  clickNewMember.innerHTML = memberTemplate;
-
-  clickNewMember.className = 'list-group-item member';
-
-  clickNewMember.setAttribute('uuid', uuid.v4());
-  memList.appendChild(clickNewMember);
-
-  const editMemberBtn = clickNewMember.querySelector('.edit-mem-btn');
-  editMemberBtn.addEventListener('click', editMember);
-
-  const deleteMemberBtn = clickNewMember.querySelector('.delete-mem');
   deleteMemberBtn.addEventListener('click', deleteMember);
-
-  const memberId = clickNewMember.getAttribute('uuid');
-
-  updateNewMember(memberId);
 
 }
 
@@ -577,11 +564,11 @@ function editMember() {
   saveMemberBtn.addEventListener('click', saveMember);
 
   //=====togglers====
-function togglers() {
-  memContent.classList.toggle('hidden');
-  memInEdit.classList.toggle('hidden');
-  inputMember.focus();
-}
+  function togglers() {
+    memContent.classList.toggle('hidden');
+    memInEdit.classList.toggle('hidden');
+    inputMember.focus();
+  }
 
   // memContent.classList.toggle('hidden');
   // memInEdit.classList.toggle('hidden');
@@ -589,7 +576,7 @@ function togglers() {
   cancelEdit.addEventListener('click', togglers);
 
 
-togglers();
+  togglers();
   //   (event) => {
   //   memContent.classList.toggle('hidden');
   //   memInEdit.classList.toggle('hidden');
