@@ -84,7 +84,7 @@ function initPageByHash() {
 
     const addMember = document.querySelector('.add-mem');
 
-    addMember.addEventListener('click', initMember);
+    addMember.addEventListener('click', initMembers);
 
     for (const member of appData.members) {
       initMembers(member);
@@ -513,16 +513,20 @@ function initMembers(member) {
 
   newMember.querySelector('.mem-name').textContent = member.name;
   newMember.setAttribute('uuid', member.id);
-  memList.appendChild(newMember);
 
+  if (member.type==='click') {
+    console.info('uuu');
+    NewMember.setAttribute('uuid', uuid.v4());
+  }
+  
   if (typeof member === 'object') {
 
   }
-  console.info(member);
-  if (!member) {
-    console.info(NewMember);
-    NewMember.setAttribute('uuid', uuid.v4());
-  }
+
+  console.info(newMember);
+
+
+  memList.appendChild(newMember);
 
   const editMemberBtn = newMember.querySelector('.edit-mem-btn');
   editMemberBtn.addEventListener('click', editMember);
@@ -579,13 +583,17 @@ function togglers() {
   inputMember.focus();
 }
 
-  memContent.classList.toggle('hidden');
-  memInEdit.classList.toggle('hidden');
-  inputMember.focus();
-  cancelEdit.addEventListener('click', (event) => {
-    memContent.classList.toggle('hidden');
-    memInEdit.classList.toggle('hidden');
-  });
+  // memContent.classList.toggle('hidden');
+  // memInEdit.classList.toggle('hidden');
+  // inputMember.focus();
+  cancelEdit.addEventListener('click', togglers);
+
+
+togglers();
+  //   (event) => {
+  //   memContent.classList.toggle('hidden');
+  //   memInEdit.classList.toggle('hidden');
+  // });
 
 }
 
