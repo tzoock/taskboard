@@ -518,7 +518,7 @@ function initMembers(member) {
     console.info('uuu');
     NewMember.setAttribute('uuid', uuid.v4());
   }
-  
+
   if (typeof member === 'object') {
 
   }
