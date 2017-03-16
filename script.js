@@ -12,6 +12,7 @@ const appData = {
 function updateMemberName(memberId, memName) {
   appData.members.forEach((member) => {
     if (memberId === member.id) {
+      console.info(memName);
       member.name = memName;
     }
   })
@@ -188,24 +189,26 @@ function addCard(task, papa) {
   edBtn.addEventListener('click', openModal);
 
   if (task && papa) {
-    newLi.setAttribute('uuid', task.id)
+    newLi.setAttribute('uuid', task.id);
     papa.appendChild(newLi);
     newLi.querySelector('.card-text').textContent = task.text;
     const cardFoote = newLi.querySelector(".card-footer");
     const members = task.members;
 
-    for (const difNames of members) {
-      let initials = '';
-      const sepNames = difNames.split(' ');
-      for (const name of sepNames) {
-        initials += name[0];
-      }
-      const newInitName = document.createElement('span');
-      newInitName.className = "label label-primary";
-      newInitName.setAttribute('title', difNames);
-      newInitName.innerHTML = initials;
-      cardFoote.appendChild(newInitName);
-    }
+    members.forEach((id) => {
+      appData.members.forEach((member) => {
+        if (id === member.id) {
+          const fullName = member.name;
+          const initialName = getFirstLetters(fullName);
+          const newInitName = document.createElement('span');
+          newInitName.className = "label label-primary";
+          newInitName.setAttribute('title', fullName);
+          newInitName.innerHTML = initialName;
+          cardFoote.appendChild(newInitName);
+        }
+      });
+    });
+
   }
   else {
     const cardList = event.target.parentNode.querySelector('.main-column > ul');
@@ -229,14 +232,33 @@ function addCard(task, papa) {
   }
 }
 
-function getListById(id) {
-  let i = -1;
-  appData.lists.forEach((list, index) => {
-    if (list.id === id) {
-i = index
+// function getListById(id) {
+//   let i = -1;
+//   appData.lists.forEach((list, index) => {
+//     if (list.id === id) {
+//       i = index
+//     }
+//   });
+//   return i
+// }
+
+function getFirstLetters(name) {
+  let initialName = '';
+  const sepNames = name.split(' ');
+  sepNames.forEach((word) => {
+    initialName += word[0];
+  });
+  return initialName
+}
+
+function getNameById(id) {
+  let name = '';
+  appData.members.forEach((member) => {
+    if (id === member.id) {
+      name = member.name
     }
   });
-  return i
+  return name
 }
 
 function openModal() {
@@ -257,9 +279,9 @@ function openModal() {
             </div>
           </div>
           <div class="form-group">
-            <label for="mem-checkbox" class="col-sm-2 control-label">Move to:</label>
+            <label for="list-checkbox" class="col-sm-2 control-label">Move to:</label>
             <div class="col-sm-10">
-              <select class="form-control mem-checkbox" id="mem-checkbox">
+              <select class="form-control list-checkbox" id="list-checkbox">
               </select>
             </div>
           </div>
@@ -307,7 +329,7 @@ function openModal() {
   const modalCardText = modal.querySelector('#edit-text');
   modalCardText.value = cardText;
 
-  const modalMoveTo = modal.querySelector('#mem-checkbox');
+  const modalMoveTo = modal.querySelector('#list-checkbox');
   appData.lists.forEach((list) => {
     const newOption = document.createElement('option');
     newOption.textContent = list.title;
@@ -318,24 +340,29 @@ function openModal() {
   appData.members.forEach((member) => {
     const newLi = document.createElement('li');
     const tamplete = `
-<label uuId="${member.id}">
-  <input type="checkbox">
+<label class="checkbox-name">
+  <input type="checkbox" uuId="${member.id}">
   ${member.name}
   </label>
 `;
     newLi.innerHTML = tamplete;
-    console.info(member.id);
     modalMembers.appendChild(newLi);
-  });
-console.info(taskId);
 
-  appData.lists.forEach((task) => {
-    console.info(task.id);
 
-    if (task.id === taskId) {
-      console.info('yaaa');
-    }
+    const checkedMe = newLi.querySelector(`[uuid="${member.id}"]`);
+    appData.lists.forEach((list) => {
+      list.tasks.forEach((task) => {
+        if (task.id === taskId) {
+          task.members.forEach((id) => {
+            if (checkedMe.getAttribute('uuid') === id) {
+              checkedMe.checked = true;
+            }
+          });
+        }
+      });
+    });
   });
+
 
   const saveBtn = modal.querySelector('.save-changes');
   saveBtn.addEventListener('click', updateTask);
@@ -357,15 +384,29 @@ function closeModal() {
 
 function updateTask() {
   const target = event.target;
-  const modalCardText = target.closest('.modal').querySelector('#edit-text');
-  const taskId = target.closest('.modal').getAttribute('taskId');
-  const listId = target.closest('.modal').getAttribute('listId');
+  const modal = target.closest('.modal');
+  const modalCardText = modal.querySelector('#edit-text');
+  const moveTo = modal.querySelector('.list-checkbox');
+  const membersList = modal.querySelector('.memlist');
+  const taskId = modal.getAttribute('taskId');
+  const listId = modal.getAttribute('listId');
 
   appData.lists.forEach((list) => {
     if (list.id === listId) {
       list.tasks.forEach((task) => {
         if (task.id === taskId) {
           task.text = modalCardText.value;
+          const resultArr = [];
+          const membersToArray = membersList.querySelectorAll('input');
+          membersToArray.forEach((input) => {
+            if (input.checked===true){
+              const memId = input.getAttribute('uuid');
+              resultArr.push(memId);
+              
+            }
+
+          });
+          task.members = resultArr;
           console.info('im the one');
           closeModal()
         }
