@@ -12,7 +12,6 @@ const appData = {
 function updateMemberName(memberId, memName) {
   appData.members.forEach((member) => {
     if (memberId === member.id) {
-      console.info(memName);
       member.name = memName;
     }
   })
@@ -26,10 +25,10 @@ function updateDeleteMember(memberId) {
   })
 }
 
-function updateNewMember(memberId) {
+function updateNewMember(memberId, memberName) {
   const newMember = {
     "id": memberId,
-    "name": 'New Member'
+    "name": memberName
   };
   appData.members.push(newMember)
 }
@@ -156,7 +155,6 @@ function addList(list) {
     };
 
     appData.lists.push(newList);
-    console.info(appData.lists);
 
     newColumn.setAttribute('uuid', uId);
   }
@@ -265,6 +263,37 @@ function getNameById(id) {
   return name
 }
 
+function getListIndexInAppdataById(id) {
+  let index = 0;
+  appData.lists.forEach((list, i) => {
+    if (list.id === id) {
+      index = i;
+    }
+  });
+  return index;
+}
+
+function getTaskIndexInListInAppdataById(listId, taskId) {
+  let index = 0;
+  appData.lists.forEach((list) => {
+    if (list.id === listId) {
+      list.tasks.forEach((task, i) => {
+        if (task.id === taskId) {
+          index = i;
+        }
+      });
+    }
+  });
+
+  return index;
+}
+
+function movingTaskToAnotherList(newListIndex, oldListIndex, taskIndex) {
+appData.lists[newListIndex].tasks.push(appData.lists[oldListIndex].tasks[taskIndex]);
+
+  appData.lists[oldListIndex].tasks.splice(taskIndex, 1)
+}
+
 function openModal() {
 
   const modalTamplate = `<div class="modal-dialog" role="document">
@@ -337,8 +366,14 @@ function openModal() {
   appData.lists.forEach((list) => {
     const newOption = document.createElement('option');
     newOption.textContent = list.title;
+    newOption.setAttribute('listId', list.id);
+    const optionId = newOption.getAttribute('listId');
+    if (optionId === listId) {
+      newOption.selected = true
+    }
     modalMoveTo.appendChild(newOption)
   });
+
 
   const modalMembers = modal.querySelector('#memlist');
   appData.members.forEach((member) => {
@@ -371,12 +406,14 @@ function openModal() {
   const saveBtn = modal.querySelector('.save-changes');
   saveBtn.addEventListener('click', updateTask);
 
+  const deleteBtn = modal.querySelector('.my-ins-delbtn');
+  deleteBtn.addEventListener('click', deleteTask);
+
   const closeBtn = modal.querySelectorAll('.my-close-btn');
   for (let x of closeBtn) {
     x.addEventListener("click", closeModal);
   }
 
-  console.info(appData);
 }
 
 function closeModal() {
@@ -395,9 +432,24 @@ function updateTask() {
   const taskId = modal.getAttribute('taskId');
   const listId = modal.getAttribute('listId');
 
+  const arrayOfMoveToOption = moveTo.querySelectorAll('option');
+  let newListIndex = 0;
+
+  arrayOfMoveToOption.forEach((option) => {
+    if (option.selected) {
+      const moveToListId = option.getAttribute('listid');
+      newListIndex = getListIndexInAppdataById(moveToListId);
+    }
+  });
+
+  const taskIndex = getTaskIndexInListInAppdataById(listId, taskId);
+  const oldListIndex = getListIndexInAppdataById(listId);
+
   appData.lists.forEach((list) => {
     if (list.id === listId) {
       list.tasks.forEach((task) => {
+
+
         if (task.id === taskId) {
           task.text = modalCardText.value;
           const resultArr = [];
@@ -411,19 +463,33 @@ function updateTask() {
 
           });
           task.members = resultArr;
-          closeModal()
+
         }
       })
     }
-  })
+  });
+
+  movingTaskToAnotherList(newListIndex, oldListIndex, taskIndex);
+
+  closeModal()
+}
+
+function deleteTask() {
+  const target = event.target;
+  const taskId = target.closest('.modal').getAttribute('taskid');
+  const listId = target.closest('.modal').getAttribute('listid');
+  const taskIndex = getTaskIndexInListInAppdataById(listId, taskId);
+  const listIndex = getListIndexInAppdataById(listId);
+  appData.lists[listIndex].tasks.splice(taskIndex, 1);
+  closeModal()
 }
 
 function editName(event) {
   const target = event.target;
   const preText = target.textContent;
-  // console.info('preText', preText);
+
   const showInput = target.parentNode.querySelector('.hidden');
-  // console.info('showInput', showInput);
+
   showInput.className = '';
   target.className = 'hidden';
   showInput.value = preText;
@@ -521,15 +587,16 @@ function initMembers(member) {
     const membersFooter = event.target;
     const footerInput = membersFooter.querySelector('input');
     const newMemName = newMember.querySelector('.mem-name');
-    console.info(newMember);
+
     newMember.setAttribute('uuid', uuid.v4());
 
     newMemName.textContent = footerInput.value;
     if (footerInput.value === '') {
       newMemName.textContent = "New Member"
     }
+
     const memberId = newMember.getAttribute('uuid');
-    updateNewMember(memberId);
+    updateNewMember(memberId, newMemName.textContent);
     footerInput.value = ''
   }
 
@@ -603,7 +670,7 @@ function saveMember() {
 }
 
 function deleteMember() {
-  console.info(event.target);
+
   const target = event.target;
   const currentLiElm = target.closest('.member');
   const memberId = currentLiElm.getAttribute('uuid');
@@ -624,7 +691,7 @@ function isAllDataReady() {
 
 function reqBoardListener(event) {
   const target = event.target.response;
-  // console.info(target);
+
   const data = JSON.parse(target);
 
   appData.lists = data.board;
@@ -662,19 +729,7 @@ function initMember() {
 /**
  * testing
  */
-// function getListByTitle() {
-//   const colArr = document.querySelectorAll('.column');
-//   colArr.forEach((title) => {
-//     const colTitle = title.querySelector('.list-name');
-//     appData.lists.forEach((dataList, index) => {
-//       let dataListTitle = dataList.title;
-//       console.info(dataListTitle, index);
-//       if (colTitle.textContent === dataListTitle) {
-//         console.info(colTitle);
-//       }
-//     });
-//   });
-// }
+
 
 
 initBoard();
