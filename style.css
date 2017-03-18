@@ -30,11 +30,14 @@ body {
 .navbar-brand{
   width: 35px;
   height: 35px;
-  padding: 1px;
+  padding: 0;
   z-index: 1;
 }
 
-
+.navbar-header {
+  width: 45px;
+  padding: 3px 5px;
+}
 
 .main-content {
   max-height: calc(100% - 50px);
@@ -43,6 +46,11 @@ body {
   align-items: flex-start;
   justify-content: space-around;
 
+}
+
+.add-list {
+  margin-top: 20px;
+  width: 250px;
 }
 
 /*.my-members {*/

@@ -49,9 +49,9 @@ function initPageByHash() {
     targetTab.parentNode.querySelector('.my-members').classList.remove('active');
 
     const addListBtn = document.createElement('button');
-    addListBtn.className = 'add-list btn-default btn';
+    addListBtn.className = 'add-list btn btn-info';
     addListBtn.id = 'addList';
-    addListBtn.textContent = 'Add List';
+    addListBtn.textContent = 'Add a list...';
     mainContent.innerHTML = addListBtn.outerHTML;
 
     for (const list of appData.lists) {
