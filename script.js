@@ -1,41 +1,19 @@
-const mainContent = document.getElementById('mainContent');
-
+/*
+ ============create by TzoocK=============
+ */
 
 /**
  * @AppData handlers
  */
-const appData = {
-  lists: [],
-  members: []
-};
 
-function updateMemberName(memberId, memName) {
-  appData.members.forEach((member) => {
-    if (memberId === member.id) {
-      member.name = memName;
-    }
-  })
-}
 
-function updateDeleteMember(memberId) {
-  appData.members.forEach((member, index) => {
-    if (memberId === member.id) {
-      appData.members.splice(index, 1)
-    }
-  })
-}
+/*
 
-function updateNewMember(memberId, memberName) {
-  const newMember = {
-    "id": memberId,
-    "name": memberName
-  };
-  appData.members.push(newMember)
-}
+ */
 
-window.addEventListener('hashchange', (event) => {
-  initPageByHash();
-});
+const mainContent = document.getElementById('mainContent');
+
+window.addEventListener('hashchange', initPageByHash);
 
 function initPageByHash() {
 
@@ -83,35 +61,17 @@ function initPageByHash() {
 
     // const addMember = document.querySelector('.add-mem');
     //
-    // addMember.addEventListener('click', initMembers);
+    // addMember.addEventListener('click', addNewMember);
 
     const submitNewMember = document.querySelector('.add-member');
 
-    submitNewMember.addEventListener('submit', initMembers);
+    submitNewMember.addEventListener('submit', addNewMember);
     for (const member of appData.members) {
-      initMembers(member);
+      addNewMember(member);
     }
   }
 
 }
-
-const memberTemplate = `<div class="mem-content">
-        <label for="inp-name" class="mem-name">
-          New Member
-        </label>
-        <div class="mem-btns">
-          <button type="button" class="edit-mem-btn btn btn-info btn-xs">Edit</button>
-          <button type="button" class="delete-mem btn btn-danger btn-xs">Delete</button>
-        </div>
-    </div>
-      <div class="hidden mem-inEdit">
-        <input type="text" class="form-control inp-name" id="inp-name">
-        <div class="mem-inEdit-btns">
-          <button type="button" class="cancel-mem btn btn-default btn-xs">Cancel</button>
-          <button type="button" class="save-mem btn btn-success btn-xs">Save</button>
-        </div>
-      </div>`;
-
 
 function addList(list) {
 
@@ -167,8 +127,6 @@ function addList(list) {
       addCard(task, papa);
     }
   }
-
-
 }
 
 function addCard(task, papa) {
@@ -186,6 +144,7 @@ function addCard(task, papa) {
   const newLi = document.createElement('li');
   newLi.className = 'card list-group-item';
   newLi.innerHTML = cardTemplate;
+
   const edBtn = newLi.querySelector('.btn-primary');
   edBtn.addEventListener('click', openModal);
 
@@ -194,9 +153,8 @@ function addCard(task, papa) {
     papa.appendChild(newLi);
     newLi.querySelector('.card-text').textContent = task.text;
     const cardFoote = newLi.querySelector(".card-footer");
-    const members = task.members;
 
-    members.forEach((id) => {
+    task.members.forEach((id) => {
       appData.members.forEach((member) => {
         if (id === member.id) {
           const fullName = member.name;
@@ -212,7 +170,7 @@ function addCard(task, papa) {
 
   }
   else {
-    const cardList = event.target.parentNode.querySelector('.main-column > ul');
+    const cardList = target.parentNode.querySelector('.main-column > ul');
     cardList.appendChild(newLi);
     newLi.setAttribute('uuId', uuid.v4());
     const currntListId = target.closest('.column').getAttribute('uuid');
@@ -234,16 +192,6 @@ function addCard(task, papa) {
   }
 }
 
-// function getListById(id) {
-//   let i = -1;
-//   appData.lists.forEach((list, index) => {
-//     if (list.id === id) {
-//       i = index
-//     }
-//   });
-//   return i
-// }
-
 function getFirstLetters(name) {
   let initialName = '';
   const sepNames = name.split(' ');
@@ -251,47 +199,6 @@ function getFirstLetters(name) {
     initialName += word[0];
   });
   return initialName
-}
-
-function getNameById(id) {
-  let name = '';
-  appData.members.forEach((member) => {
-    if (id === member.id) {
-      name = member.name
-    }
-  });
-  return name
-}
-
-function getListIndexInAppdataById(id) {
-  let index = 0;
-  appData.lists.forEach((list, i) => {
-    if (list.id === id) {
-      index = i;
-    }
-  });
-  return index;
-}
-
-function getTaskIndexInListInAppdataById(listId, taskId) {
-  let index = 0;
-  appData.lists.forEach((list) => {
-    if (list.id === listId) {
-      list.tasks.forEach((task, i) => {
-        if (task.id === taskId) {
-          index = i;
-        }
-      });
-    }
-  });
-
-  return index;
-}
-
-function movingTaskToAnotherList(newListIndex, oldListIndex, taskIndex) {
-appData.lists[newListIndex].tasks.push(appData.lists[oldListIndex].tasks[taskIndex]);
-
-  appData.lists[oldListIndex].tasks.splice(taskIndex, 1)
 }
 
 function openModal() {
@@ -417,122 +324,51 @@ function openModal() {
 }
 
 function closeModal() {
-
   const modalElm = event.target.closest('.modal');
   modalElm.style.display = 'none';
-  initPageByHash()
-}
-
-function updateTask() {
-  const target = event.target;
-  const modal = target.closest('.modal');
-  const modalCardText = modal.querySelector('#edit-text');
-  const moveTo = modal.querySelector('.list-checkbox');
-  const membersList = modal.querySelector('.memlist');
-  const taskId = modal.getAttribute('taskId');
-  const listId = modal.getAttribute('listId');
-
-  const arrayOfMoveToOption = moveTo.querySelectorAll('option');
-  let newListIndex = 0;
-
-  arrayOfMoveToOption.forEach((option) => {
-    if (option.selected) {
-      const moveToListId = option.getAttribute('listid');
-      newListIndex = getListIndexInAppdataById(moveToListId);
-    }
-  });
-
-  const taskIndex = getTaskIndexInListInAppdataById(listId, taskId);
-  const oldListIndex = getListIndexInAppdataById(listId);
-
-  appData.lists.forEach((list) => {
-    if (list.id === listId) {
-      list.tasks.forEach((task) => {
-
-
-        if (task.id === taskId) {
-          task.text = modalCardText.value;
-          const resultArr = [];
-          const membersToArray = membersList.querySelectorAll('input');
-          membersToArray.forEach((input) => {
-            if (input.checked === true) {
-              const memId = input.getAttribute('uuid');
-              resultArr.push(memId);
-
-            }
-
-          });
-          task.members = resultArr;
-
-        }
-      })
-    }
-  });
-
-  movingTaskToAnotherList(newListIndex, oldListIndex, taskIndex);
-
-  closeModal()
-}
-
-function deleteTask() {
-  const target = event.target;
-  const taskId = target.closest('.modal').getAttribute('taskid');
-  const listId = target.closest('.modal').getAttribute('listid');
-  const taskIndex = getTaskIndexInListInAppdataById(listId, taskId);
-  const listIndex = getListIndexInAppdataById(listId);
-  appData.lists[listIndex].tasks.splice(taskIndex, 1);
-  closeModal()
 }
 
 function editName(event) {
   const target = event.target;
+
   const preText = target.textContent;
 
-  const showInput = target.parentNode.querySelector('.hidden');
+  const inputElm = target.parentNode.querySelector('.hidden');
 
-  showInput.className = '';
-  target.className = 'hidden';
-  showInput.value = preText;
-  showInput.focus();
+  inputElm.classList.toggle('hidden');
+  target.classList.toggle('hidden');
+  inputElm.value = preText;
+  inputElm.focus();
 
-  showInput.addEventListener('keydown', enterInp);
-  showInput.addEventListener('blur', blurInp);
-
-}
-
-function enterInp() {
-  const target = event.target;
-  const showInput = target.parentNode.querySelector('.hidden');
-
-
-  if (event.keyCode === 13) {
-    const preText = showInput.textContent;
-    showInput.textContent = target.value;
-    target.className = 'hidden';
-
-    appData.lists.forEach((list, index) => {
-      if (list.title === preText) {
-        appData.lists[index].title = target.value
-      }
-    });
-  }
+  inputElm.addEventListener('keydown', enterInp);
+  inputElm.addEventListener('blur', blurInp);
 
 }
 
 function blurInp() {
   const target = event.target;
-  const showInput = target.parentNode.querySelector('.hidden');
-  const preText = showInput.textContent;
-  showInput.textContent = target.value;
-  target.className = 'hidden';
-  showInput.className = 'list-name panel-title';
+  const changedListTitle = target.value;
+  const listTitle = target.parentNode.querySelector('.list-name');
+  const preText = listTitle.textContent;
+  listTitle.textContent = changedListTitle;
+  target.classList.add('hidden');
+  listTitle.classList.remove('hidden');
 
-  appData.lists.forEach((list, index) => {
+  updateListNameInAppData(changedListTitle, preText);
+}
 
-    if (list.title === preText) {
-      appData.lists[index].title = target.value
-    }
-  });
+function enterInp() {
+    const target = event.target;
+
+    if (event.keyCode === 13) {
+      const changedListTitle = target.value;
+      const listTitle = target.parentNode.querySelector('.list-name');
+      const preText = listTitle.textContent;
+    listTitle.textContent = changedListTitle;
+    target.classList.add('hidden');
+    listTitle.classList.remove('hidden');
+      updateListNameInAppData(changedListTitle, preText);
+  }
 }
 
 function openDeleteBtn(event) {
@@ -570,18 +406,30 @@ function openDeleteBtn(event) {
   }
 }
 
-function initMembers(member) {
+function addNewMember(member) {
+
+  const memberTemplate = `<div class="mem-content">
+        <label for="inp-name" class="mem-name">
+          New Member
+        </label>
+        <div class="mem-btns">
+          <button type="button" class="edit-mem-btn btn btn-info btn-xs">Edit</button>
+          <button type="button" class="delete-mem btn btn-danger btn-xs">Delete</button>
+        </div>
+    </div>
+      <div class="hidden mem-inEdit">
+        <input type="text" class="form-control inp-name" id="inp-name">
+        <div class="mem-inEdit-btns">
+          <button type="button" class="cancel-mem btn btn-default btn-xs">Cancel</button>
+          <button type="button" class="save-mem btn btn-success btn-xs">Save</button>
+        </div>
+      </div>`;
 
   const memList = document.querySelector('.mem-list');
-
   const newMember = document.createElement('li');
-
   newMember.innerHTML = memberTemplate;
-
   newMember.className = 'list-group-item member';
-
   newMember.querySelector('.mem-name').textContent = member.name;
-
 
   if (member.type === 'submit') {
     const membersFooter = event.target;
@@ -616,7 +464,6 @@ function initMembers(member) {
 
 function editMember() {
 
-
   const target = event.target;
   const currentLiElm = target.closest('.member');
   const memContent = currentLiElm.querySelector('.mem-content');
@@ -637,18 +484,9 @@ function editMember() {
     inputMember.focus();
   }
 
-  // memContent.classList.toggle('hidden');
-  // memInEdit.classList.toggle('hidden');
-  // inputMember.focus();
   cancelEdit.addEventListener('click', togglers);
 
-
   togglers();
-  //   (event) => {
-  //   memContent.classList.toggle('hidden');
-  //   memInEdit.classList.toggle('hidden');
-  // });
-
 }
 
 function saveMember() {
@@ -680,38 +518,6 @@ function deleteMember() {
   currentLiElm.remove()
 }
 
-function isAllDataReady() {
-  if (appData.lists.length && appData.members.length) {
-    return true
-  }
-  else {
-    return false
-  }
-}
-
-function reqBoardListener(event) {
-  const target = event.target.response;
-
-  const data = JSON.parse(target);
-
-  appData.lists = data.board;
-
-  if (isAllDataReady()) {
-    initPageByHash();
-  }
-}
-
-function reqMembersListener(event) {
-  const target = event.target.response;
-  const data = JSON.parse(target);
-
-  appData.members = data.members;
-
-  if (isAllDataReady()) {
-    initPageByHash();
-  }
-}
-
 function initBoard() {
   const oReq = new XMLHttpRequest();
   oReq.addEventListener("load", reqBoardListener);
@@ -725,12 +531,6 @@ function initMember() {
   mReq.open("GET", "assets/members.json");
   mReq.send();
 }
-
-/**
- * testing
- */
-
-
 
 initBoard();
 initMember();
