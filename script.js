@@ -2,6 +2,7 @@
  ============create by TzoocK=============
  */
 
+
 const mainContent = document.getElementById('mainContent');
 
 window.addEventListener('hashchange', initPageByHash);
@@ -24,7 +25,7 @@ function initPageByHash() {
     addListBtn.textContent = 'Add a list...';
     mainContent.innerHTML = addListBtn.outerHTML;
 
-    for (const list of appData.lists) {
+    for (const list of getLists()) {
       addList(list);
     }
 
@@ -55,7 +56,7 @@ function initPageByHash() {
     const submitNewMember = document.querySelector('.add-member');
 
     submitNewMember.addEventListener('submit', addNewMember);
-    for (const member of appData.members) {
+    for (const member of getMembers()) {
       addNewMember(member);
     }
   }
@@ -87,6 +88,10 @@ function initPageByHash() {
   }
 
 }
+
+/**
+ =========== Board View ====
+ */
 
 function addList(list) {
 
@@ -129,7 +134,7 @@ function addList(list) {
       title: listName.textContent
     };
 
-    appData.lists.push(newList);
+    addListToData(newList);
 
     newColumn.setAttribute('uuid', uId);
   }
@@ -170,7 +175,7 @@ function addCard(task, papa) {
     const cardFoote = newLi.querySelector(".card-footer");
 
     task.members.forEach((id) => {
-      appData.members.forEach((member) => {
+      getMembers().forEach((member) => {
         if (id === member.id) {
           const fullName = member.name;
           const initialName = getFirstLetters(fullName);
@@ -192,18 +197,9 @@ function addCard(task, papa) {
     const emptyCardText = newLi.querySelector('.card-text').textContent;
     const emptyCardMembers = newLi.querySelector('.card-footer').querySelectorAll('span');
     const cardId = newLi.getAttribute('uuid');
-    appData.lists.forEach((list) => {
 
-      if (list.id === currntListId) {
-        const emptyCard = {
-          id: cardId,
-          text: emptyCardText,
-          members: emptyCardMembers,
-        };
-        list.tasks.push(emptyCard);
+    addTask(currntListId, cardId, emptyCardText, emptyCardMembers);
 
-      }
-    });
   }
 }
 
@@ -214,133 +210,6 @@ function getFirstLetters(name) {
     initialName += word[0];
   });
   return initialName
-}
-
-function openModal() {
-
-  const modalTamplate = `<div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="my-close-btn close" data-dismiss="modal" aria-label="Close"><span
-          aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Edit Card</h4>
-      </div>
-      <div class="modal-body">
-        <form class="form-horizontal">
-          <div class="form-group">
-            <label for="edit-text" class="col-sm-2 control-label">Card Text</label>
-            <div class="col-sm-10">
-              <textarea class="form-control" rows="3" id="edit-text"></textarea>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="list-checkbox" class="col-sm-2 control-label">Move to:</label>
-            <div class="col-sm-10">
-              <select class="form-control list-checkbox" id="list-checkbox">
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-
-            <label for="memlist" class="col-sm-2 control-label">Members:</label>
-
-            <div class="col-sm-7 hold-mem panel panel-default">
-              <ul class="memlist" id="memlist">
-             
-              </ul>
-            </div>
-
-          </div>
-          <div class="form-group">
-
-            <button type="button" class="my-ins-delbtn btn btn-danger">Delete Card</button>
-
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default my-close-btn" data-dismiss="modal">Close</button>
-        <button type="button" class="save-changes btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>`;
-  const target = event.target;
-  const modal = document.createElement('div');
-  const body = document.querySelector('body');
-  const card = target.closest('.card');
-  const list = target.closest('.column');
-  const taskId = card.getAttribute('uuid');
-  const listId = list.getAttribute('uuid');
-
-  body.appendChild(modal);
-  modal.className = 'modal';
-  modal.setAttribute('tabindex', '-1');
-  modal.setAttribute('role', 'dialog');
-  modal.innerHTML = modalTamplate;
-  modal.style.display = 'block';
-  modal.setAttribute('taskId', taskId);
-  modal.setAttribute('listId', listId);
-  const cardText = card.querySelector('.card-text').textContent;
-  const modalCardText = modal.querySelector('#edit-text');
-  modalCardText.value = cardText;
-
-  const modalMoveTo = modal.querySelector('#list-checkbox');
-  appData.lists.forEach((list) => {
-    const newOption = document.createElement('option');
-    newOption.textContent = list.title;
-    newOption.setAttribute('listId', list.id);
-    const optionId = newOption.getAttribute('listId');
-    if (optionId === listId) {
-      newOption.selected = true
-    }
-    modalMoveTo.appendChild(newOption)
-  });
-
-
-  const modalMembers = modal.querySelector('#memlist');
-  appData.members.forEach((member) => {
-    const newLi = document.createElement('li');
-    const tamplete = `
-<label class="checkbox-name">
-  <input type="checkbox" uuId="${member.id}">
-  ${member.name}
-  </label>
-`;
-    newLi.innerHTML = tamplete;
-    modalMembers.appendChild(newLi);
-
-
-    const checkedMe = newLi.querySelector(`[uuid="${member.id}"]`);
-    appData.lists.forEach((list) => {
-      list.tasks.forEach((task) => {
-        if (task.id === taskId) {
-          task.members.forEach((id) => {
-            if (checkedMe.getAttribute('uuid') === id) {
-              checkedMe.checked = true;
-            }
-          });
-        }
-      });
-    });
-  });
-
-
-  const saveBtn = modal.querySelector('.save-changes');
-  saveBtn.addEventListener('click', updateTask);
-
-  const deleteBtn = modal.querySelector('.my-ins-delbtn');
-  deleteBtn.addEventListener('click', deleteTask);
-
-  const closeBtn = modal.querySelectorAll('.my-close-btn');
-  for (let x of closeBtn) {
-    x.addEventListener("click", closeModal);
-  }
-
-}
-
-function closeModal() {
-  const modalElm = event.target.closest('.modal');
-  modalElm.style.display = 'none';
 }
 
 function editName(event) {
@@ -402,12 +271,10 @@ function openDeleteBtn(event) {
       if (confirmDel === true) {
         const columElm = target.closest('.column');
         columElm.remove();
-        appData.lists.forEach((item) => {
-          let index = appData.lists.indexOf(item);
-          if (listStr === item.title) {
-            appData.lists.splice(index, 1)
-          }
-        })
+
+        deleteListInAppData(listStr);
+
+
       }
       else {
         dropdownMenu.style.display = 'none'
@@ -420,6 +287,134 @@ function openDeleteBtn(event) {
     dropdownMenu.style.display = 'none'
   }
 }
+
+/**
+ ============= Modal view ====
+ */
+
+function openModal() {
+
+  const modalTamplate = `<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="my-close-btn close" data-dismiss="modal" aria-label="Close"><span
+          aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit Card</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="edit-text" class="col-sm-2 control-label">Card Text</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" rows="3" id="edit-text"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="list-checkbox" class="col-sm-2 control-label">Move to:</label>
+            <div class="col-sm-10">
+              <select class="form-control list-checkbox" id="list-checkbox">
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+
+            <label for="memlist" class="col-sm-2 control-label">Members:</label>
+
+            <div class="col-sm-7 hold-mem panel panel-default">
+              <ul class="memlist" id="memlist">
+             
+              </ul>
+            </div>
+
+          </div>
+          <div class="form-group">
+
+            <button type="button" class="my-ins-delbtn btn btn-danger">Delete Card</button>
+
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default my-close-btn" data-dismiss="modal">Close</button>
+        <button type="button" class="save-changes btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>`;
+
+  const target = event.target;
+  const modal = document.createElement('div');
+  const body = document.querySelector('body');
+  const card = target.closest('.card');
+  const list = target.closest('.column');
+  const taskId = card.getAttribute('uuid');
+  const listId = list.getAttribute('uuid');
+
+  body.appendChild(modal);
+  modal.className = 'modal';
+  modal.setAttribute('tabindex', '-1');
+  modal.setAttribute('role', 'dialog');
+  modal.innerHTML = modalTamplate;
+  modal.style.display = 'block';
+  modal.setAttribute('taskId', taskId);
+  modal.setAttribute('listId', listId);
+  const cardText = card.querySelector('.card-text').textContent;
+  const modalCardText = modal.querySelector('#edit-text');
+  modalCardText.value = cardText;
+
+  const modalMoveTo = modal.querySelector('#list-checkbox');
+  getLists().forEach((list) => {
+    const newOption = document.createElement('option');
+    newOption.textContent = list.title;
+    newOption.setAttribute('listId', list.id);
+    const optionId = newOption.getAttribute('listId');
+    if (optionId === listId) {
+      newOption.selected = true
+    }
+    modalMoveTo.appendChild(newOption)
+  });
+
+  //build  members section in modal
+
+  const modalMembers = modal.querySelector('#memlist');
+  getMembers().forEach((member) => {
+    const newLi = document.createElement('li');
+    const tamplete = `<label class="checkbox-name">
+  <input type="checkbox" uuId="${member.id}">
+  ${member.name}
+  </label>`;
+    newLi.innerHTML = tamplete;
+    modalMembers.appendChild(newLi);
+
+    // find which member assigned to the task
+    const checkedMe = newLi.querySelector(`[uuid="${member.id}"]`);
+const memberId = checkedMe.getAttribute('uuid');
+    if (isMemberInTask(checkedMe, memberId, taskId)) {
+      checkedMe.checked = true;
+    }
+  });
+
+
+  const saveBtn = modal.querySelector('.save-changes');
+  saveBtn.addEventListener('click', updateTask);
+
+  const deleteBtn = modal.querySelector('.my-ins-delbtn');
+  deleteBtn.addEventListener('click', deleteTask);
+
+  const closeBtn = modal.querySelectorAll('.my-close-btn');
+  for (let x of closeBtn) {
+    x.addEventListener("click", closeModal);
+  }
+
+}
+
+function closeModal() {
+  const modalElm = event.target.closest('.modal');
+  modalElm.style.display = 'none';
+}
+
+/**
+ * =============== Members View ====
+ */
 
 function addNewMember(member) {
 
@@ -533,6 +528,10 @@ function deleteMember() {
   currentLiElm.remove()
 }
 
+/**
+ * ========= ??? ====
+ */
+
 function initBoard() {
   const oReq = new XMLHttpRequest();
   oReq.addEventListener("load", reqBoardListener);
@@ -549,4 +548,3 @@ function initMember() {
 
 initBoard();
 initMember();
-

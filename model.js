@@ -40,6 +40,46 @@ function isAllDataReady() {
   }
 }
 
+function getLists() {
+  return appData.lists
+}
+
+function addListToData(data) {
+  return appData.lists.push(data)
+}
+
+function addTask(currntListId, cardId, emptyCardText, emptyCardMembers) {
+  appData.lists.forEach((list) => {
+
+    if (list.id === currntListId) {
+      const emptyCard = {
+        id: cardId,
+        text: emptyCardText,
+        members: emptyCardMembers,
+      };
+      list.tasks.push(emptyCard);
+    }
+  });
+}
+
+function isMemberInTask(checkedMe, memberId, taskId) {
+  getLists().forEach((list) => {
+    list.tasks.forEach((task) => {
+      if (task.id === taskId) {
+        task.members.forEach((id) => {
+          if (checkedMe.getAttribute('uuid') === id) {
+            checkedMe.checked = true;
+          }
+        });
+      }
+    });
+  });
+}
+
+function getMembers() {
+  return appData.members
+}
+
 function updateMemberName(memberId, memName) {
   appData.members.forEach((member) => {
     if (memberId === member.id) {
@@ -167,32 +207,41 @@ function deleteTask() {
   closeModal()
 }
 
-function getNameById(id) {
-  let name = '';
-  appData.members.forEach((member) => {
-    if (id === member.id) {
-      name = member.name
+function deleteListInAppData(listStr) {
+  appData.lists.forEach((item) => {
+    let index = appData.lists.indexOf(item);
+    if (listStr === item.title) {
+      appData.lists.splice(index, 1)
     }
-  });
-  return name
+  })
 }
 
-// function getListById(id) {
-//   let i = -1;
-//   appData.lists.forEach((list, index) => {
-//     if (list.id === id) {
-//       i = index
-//     }
-//   });
-//   return i
-// }
-
-// function getListById(id) {
-//   let i = -1;
-//   appData.lists.forEach((list, index) => {
-//     if (list.id === id) {
-//       i = index
-//     }
-//   });
-//   return i
-// }
+/*
+ // function getNameById(id) {
+ //   let name = '';
+ //   appData.members.forEach((member) => {
+ //     if (id === member.id) {
+ //       name = member.name
+ //     }
+ //   });
+ //   return name
+ // }
+ // function getListById(id) {
+ //   let i = -1;
+ //   appData.lists.forEach((list, index) => {
+ //     if (list.id === id) {
+ //       i = index
+ //     }
+ //   });
+ //   return i
+ // }
+ // function getListById(id) {
+ //   let i = -1;
+ //   appData.lists.forEach((list, index) => {
+ //     if (list.id === id) {
+ //       i = index
+ //     }
+ //   });
+ //   return i
+ // }
+ */
