@@ -90,9 +90,13 @@ function getTaskIndexInListInAppdataById(listId, taskId) {
 }
 
 function movingTaskToAnotherList(newListIndex, oldListIndex, taskIndex) {
-  appData.lists[newListIndex].tasks.push(appData.lists[oldListIndex].tasks[taskIndex]);
 
-  appData.lists[oldListIndex].tasks.splice(taskIndex, 1)
+  appData.lists[newListIndex].tasks.push(appData.lists[oldListIndex].tasks[taskIndex]);
+  appData.lists[oldListIndex].tasks.splice(taskIndex, 1);
+
+  if (newListIndex === undefined) {
+    appData.lists[oldListIndex].push(appData.lists[oldListIndex].tasks[taskIndex])
+  }
 }
 
 function updateListNameInAppData(changedListTitle, preText) {
@@ -144,7 +148,10 @@ function updateTask() {
     }
   });
 
-  movingTaskToAnotherList(newListIndex, oldListIndex, taskIndex);
+  if (newListIndex !== oldListIndex) {
+    movingTaskToAnotherList(newListIndex, oldListIndex, taskIndex);
+  }
+
 
   closeModal();
   initPageByHash()

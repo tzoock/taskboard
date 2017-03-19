@@ -1,14 +1,5 @@
-/*
- ============create by TzoocK=============
- */
-
 /**
- * @AppData handlers
- */
-
-
-/*
-
+ ============create by TzoocK=============
  */
 
 const mainContent = document.getElementById('mainContent');
@@ -25,6 +16,7 @@ function initPageByHash() {
     const targetTab = document.querySelector(".my-board");
     targetTab.className = "my-board active";
     targetTab.parentNode.querySelector('.my-members').classList.remove('active');
+    targetTab.parentNode.querySelector('.my-windows').classList.remove('active');
 
     const addListBtn = document.createElement('button');
     addListBtn.className = 'add-list btn btn-info';
@@ -45,6 +37,7 @@ function initPageByHash() {
     const targetTab = document.querySelector(".my-members");
     targetTab.className = "my-members active";
     targetTab.parentNode.querySelector('.my-board').classList.remove('active');
+    targetTab.parentNode.querySelector('.my-windows').classList.remove('active');
 
     const membersTemplate = ` <div>
  <h2 class="mem-head">Taskboard Members</h2>
@@ -59,16 +52,38 @@ function initPageByHash() {
 
     mainContent.innerHTML = membersTemplate;
 
-    // const addMember = document.querySelector('.add-mem');
-    //
-    // addMember.addEventListener('click', addNewMember);
-
     const submitNewMember = document.querySelector('.add-member');
 
     submitNewMember.addEventListener('submit', addNewMember);
     for (const member of appData.members) {
       addNewMember(member);
     }
+  }
+
+  if (window.location.hash === '#windows') {
+    const targetTab = document.querySelector(".my-windows");
+    targetTab.className = "my-windows active";
+    targetTab.parentNode.querySelector('.my-board').classList.remove('active');
+    targetTab.parentNode.querySelector('.my-members').classList.remove('active');
+
+    const windowsTemplate = `
+<div class="black-me">
+<div class="window">
+  <div class="logo">
+    <p class="top">Tzoock</p>
+    <p class="mid">This Section will be used<span>React</span></p>
+    <p class="bottom">Please Hold Tight</p>
+  </div>
+  <div class="container">
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+  </div>
+</div>
+</div>`;
+
+    mainContent.innerHTML = windowsTemplate;
+
   }
 
 }
@@ -78,7 +93,7 @@ function addList(list) {
   const listTemplate = `<div class="list-header panel-heading">
     <div class="list-name panel-title">New List
     </div>
-    <input type="text" class="hidden">
+    <input type="text" class="hidden" maxlength="28">
 <div class="dropdown">
       <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="true">
@@ -132,7 +147,7 @@ function addList(list) {
 function addCard(task, papa) {
   const target = event.target;
 
-  const cardTemplate = `<button type="button" class="my-ed-btn btn btn-primary btn-xs">
+  const cardTemplate = `<button type="button" class="my-ed-btn btn btn-info btn-xs">
   Edit
 </button>
 <p class="card-text">
@@ -142,10 +157,10 @@ function addCard(task, papa) {
 </div>`;
 
   const newLi = document.createElement('li');
-  newLi.className = 'card list-group-item';
+  newLi.className = 'card panel panel-info';
   newLi.innerHTML = cardTemplate;
 
-  const edBtn = newLi.querySelector('.btn-primary');
+  const edBtn = newLi.querySelector('.my-ed-btn');
   edBtn.addEventListener('click', openModal);
 
   if (task && papa) {
@@ -358,16 +373,16 @@ function blurInp() {
 }
 
 function enterInp() {
-    const target = event.target;
+  const target = event.target;
 
-    if (event.keyCode === 13) {
-      const changedListTitle = target.value;
-      const listTitle = target.parentNode.querySelector('.list-name');
-      const preText = listTitle.textContent;
+  if (event.keyCode === 13) {
+    const changedListTitle = target.value;
+    const listTitle = target.parentNode.querySelector('.list-name');
+    const preText = listTitle.textContent;
     listTitle.textContent = changedListTitle;
     target.classList.add('hidden');
     listTitle.classList.remove('hidden');
-      updateListNameInAppData(changedListTitle, preText);
+    updateListNameInAppData(changedListTitle, preText);
   }
 }
 
