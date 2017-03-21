@@ -154,36 +154,44 @@
     }
   }
 
-  function dropCard() {
-    console.info(event.target);
+  function dropCard(event) {
+    const cardId = event.dataTransfer.getItem('uuid');
+    event.preventDefault();
+    console.info(cardId);
   }
 
   function cardDrag() {
-    const card = event.target;
-   console.info(card);
+  const card = event.currentTarget;
+   // console.info(card);
   }
 
   function changeColor() {
     // event.target.closest('.card').style.background = 'red'
   }
 
-  function cardDragStart() {
+  function cardDragStart(event) {
+    event.dataTransfer.setData("text/plain", event.target.id);
     // console.info('start', event.target);
   }
 
-  function cardDragEnd() {
-    // console.info('End', event.target);
+  function cardDragEnd(event) {
+    event.preventDefault();
+    console.info('cardDragEnd', event.currentTarget);
   }
 
-  function cardDragenter() {
-// console.info(event.target);
+  function cardDragenter(event) {
+    event.preventDefault();
+
+// console.info('cardDragenter', event.currentTarget);
   }
 
   function cardDragExit() {
-    console.info(event.target);
+    // console.info(event.currentTarget);
   }
 
-  function cardDragLeave() {
+  function cardDragLeave(event) {
+
+    event.preventDefault();
     console.info('out');
   }
 
@@ -210,7 +218,7 @@
     newLi.addEventListener("dragstart", cardDragStart);
     newLi.addEventListener("dragend", cardDragEnd);
     newLi.addEventListener('drop', dropCard);
-    newLi.addEventListener('dragenter', cardDragenter, false);
+    newLi.addEventListener('dragenter', cardDragenter);
     newLi.addEventListener('dragexit', cardDragExit);
 newLi.addEventListener('dragleave', cardDragLeave);
 
@@ -609,12 +617,18 @@ newLi.addEventListener('dragleave', cardDragLeave);
     saveBtn.addEventListener('click', updateTask);
 
     const deleteBtn = modal.querySelector('.my-ins-delbtn');
-    deleteBtn.addEventListener('click', MODEL.deleteTask);
+    deleteBtn.addEventListener('click', deleteTask);
 
     const closeBtn = modal.querySelectorAll('.my-close-btn');
     for (let x of closeBtn) {
       x.addEventListener("click", closeModal);
     }
+  }
+
+  function deleteTask(event) {
+    MODEL.deleteTask(event);
+    closeModal();
+    initPageByHash()
   }
 
   function updateTask(event) {
@@ -629,8 +643,6 @@ newLi.addEventListener('dragleave', cardDragLeave);
   }
 
 
-
-
   if (localStorage.getItem('appData')) {
     MODEL.localStorageData();
     initPageByHash();
@@ -639,6 +651,5 @@ newLi.addEventListener('dragleave', cardDragLeave);
     initBoard();
     initMembers();
   }
-
 
 })();

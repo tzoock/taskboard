@@ -218,7 +218,6 @@ const MODEL = (function () {
     const listIndex = getListIndexInAppdataById(listId);
     appData.lists[listIndex].tasks.splice(taskIndex, 1);
     saveAppDataToLocalStorage();
-    closeModal()
   }
 
   function deleteListInAppData(listStr) {
