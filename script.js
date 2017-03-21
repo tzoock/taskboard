@@ -160,7 +160,7 @@
 
   function cardDrag() {
     const card = event.target;
-    // console.info('cardDrag', card);
+   console.info(card);
   }
 
   function changeColor() {
@@ -176,7 +176,15 @@
   }
 
   function cardDragenter() {
+// console.info(event.target);
+  }
 
+  function cardDragExit() {
+    console.info(event.target);
+  }
+
+  function cardDragLeave() {
+    console.info('out');
   }
 
   function addCard(task, papa) {
@@ -202,7 +210,9 @@
     newLi.addEventListener("dragstart", cardDragStart);
     newLi.addEventListener("dragend", cardDragEnd);
     newLi.addEventListener('drop', dropCard);
-    newLi.addEventListener('dragenter', cardDragenter);
+    newLi.addEventListener('dragenter', cardDragenter, false);
+    newLi.addEventListener('dragexit', cardDragExit);
+newLi.addEventListener('dragleave', cardDragLeave);
 
     //=====================
 
