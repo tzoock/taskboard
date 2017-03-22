@@ -23,7 +23,6 @@ const MODEL = (function () {
     localStorage.setItem('appData', JSON.stringify(appData));
   }
 
-
   function isAllDataReady() {
 
     if (appData.lists.length && appData.members.length) {
@@ -233,6 +232,10 @@ const MODEL = (function () {
   function localStorageData() {
     appData = JSON.parse(localStorage.getItem('appData'));
   }
+
+  //drag data
+
+
 
   return {
     saveAppDataToLocalStorage,
