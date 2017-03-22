@@ -154,25 +154,48 @@
     }
   }
 
-  function dropCard(event) {
-    console.info(event);
-    // const cardId = event.dataTransfer.getItem('uuid');
-    event.preventDefault();
-    // console.info(cardId);
-    console.info('jjj');
-    console.info(event);
-  }
+  let dragged;
+  let overElm;
+
+
 
   function cardDragOver(event) {
-    event.currentTarget.style.border = '2px dashed #000';
+    event.preventDefault();
+    overElm = event.currentTarget;
+    // console.info('cardDragOveer', event.currentTarget);
+    overElm.style.border = '2px dashed #000';
     // event.target.closest('.card').style.background = 'red'
+
+  }
+
+
+
+  function cardDragenter(event) {
+    event.preventDefault();
+    event.currentTarget.style.marginTop= `${dragged.height}`;
+   console.info(event.currentTarget);
+  }
+
+  function cardDragLeave(event) {
+    overElm.style.border = 'initial';
+    // event.preventDefault();
+    console.info('out');
   }
 
   function cardDragStart(event) {
-    const dt = event.dataTransfer;
-    const cardId = event.currentTarget.getAttribute('uuid');
-    dt.setData("text/plain", cardId);
-    // console.info(event.currentTarget.getAttribute('uuid'));
+    dragged = event.target;
+    event.target.style.opacity = .5;
+
+  }
+
+  function dropCard(event) {
+    event.preventDefault();
+
+    // const cardId = event.dataTransfer.getItem('uuid');
+    // event.preventDefault();
+    // console.info(cardId);
+    dragged.parentNode.removeChild(dragged);
+    event.currentTarget.parentNode.appendChild(dragged);
   }
 
 //   function cardDrag() {
@@ -185,21 +208,12 @@
 //     console.info('carddragEnd', event.currentTarget);
 //   }
 //
-//   function cardDragenter(event) {
-//     event.preventDefault();
-//
-// // console.info('cardDragenter', event.currentTarget);
-//   }
 //
 //   function cardDragExit() {
 //     // console.info(event.currentTarget);
 //   }
 //
-//   function cardDragLeave(event) {
-//
-//     event.preventDefault();
-//     console.info('out');
-//   }
+
 
   function addCard(task, papa) {
 
@@ -214,6 +228,7 @@
 
     const newLi = document.createElement('li');
     newLi.className = 'card panel panel-info';
+    newLi.id = 'drop-zone';
     newLi.setAttribute('draggable', 'true');
     newLi.innerHTML = cardTemplate;
 
@@ -221,15 +236,14 @@
 
     newLi.addEventListener("dragover", cardDragOver);
     newLi.addEventListener("dragstart", cardDragStart);
-
-    // newLi.addEventListener('drop', dropCard);
+    newLi.addEventListener('dragenter', cardDragenter);
+    newLi.addEventListener('drop', dropCard);
+    newLi.addEventListener('dragleave', cardDragLeave);
 
     // newLi.addEventListener("drag", cardDrag);
     // newLi.addEventListener("dragend", cardDragEnd);
-
-    // newLi.addEventListener('dragenter', cardDragenter);
     // newLi.addEventListener('dragexit', cardDragExit);
-    // newLi.addEventListener('dragleave', cardDragLeave);
+
 
     //=====================
 
