@@ -155,45 +155,51 @@
   }
 
   function dropCard(event) {
-    const cardId = event.dataTransfer.getItem('uuid');
+    console.info(event);
+    // const cardId = event.dataTransfer.getItem('uuid');
     event.preventDefault();
-    console.info(cardId);
+    // console.info(cardId);
+    console.info('jjj');
+    console.info(event);
   }
 
-  function cardDrag() {
-  const card = event.currentTarget;
-   // console.info(card);
-  }
-
-  function changeColor() {
+  function cardDragOver(event) {
+    event.currentTarget.style.border = '2px dashed #000';
     // event.target.closest('.card').style.background = 'red'
   }
 
   function cardDragStart(event) {
-    event.dataTransfer.setData("text/plain", event.target.id);
-    // console.info('start', event.target);
+    const dt = event.dataTransfer;
+    const cardId = event.currentTarget.getAttribute('uuid');
+    dt.setData("text/plain", cardId);
+    // console.info(event.currentTarget.getAttribute('uuid'));
   }
 
-  function cardDragEnd(event) {
-    event.preventDefault();
-    console.info('cardDragEnd', event.currentTarget);
-  }
-
-  function cardDragenter(event) {
-    event.preventDefault();
-
-// console.info('cardDragenter', event.currentTarget);
-  }
-
-  function cardDragExit() {
-    // console.info(event.currentTarget);
-  }
-
-  function cardDragLeave(event) {
-
-    event.preventDefault();
-    console.info('out');
-  }
+//   function cardDrag() {
+//     const card = event.currentTarget;
+//     // console.info(card);
+//   }
+//
+//   function cardDragEnd(event) {
+//     event.preventDefault();
+//     console.info('carddragEnd', event.currentTarget);
+//   }
+//
+//   function cardDragenter(event) {
+//     event.preventDefault();
+//
+// // console.info('cardDragenter', event.currentTarget);
+//   }
+//
+//   function cardDragExit() {
+//     // console.info(event.currentTarget);
+//   }
+//
+//   function cardDragLeave(event) {
+//
+//     event.preventDefault();
+//     console.info('out');
+//   }
 
   function addCard(task, papa) {
 
@@ -213,14 +219,17 @@
 
     //======== drag ===
 
-    newLi.addEventListener("drag", cardDrag);
-    newLi.addEventListener("dragover", changeColor);
+    newLi.addEventListener("dragover", cardDragOver);
     newLi.addEventListener("dragstart", cardDragStart);
-    newLi.addEventListener("dragend", cardDragEnd);
-    newLi.addEventListener('drop', dropCard);
-    newLi.addEventListener('dragenter', cardDragenter);
-    newLi.addEventListener('dragexit', cardDragExit);
-newLi.addEventListener('dragleave', cardDragLeave);
+
+    // newLi.addEventListener('drop', dropCard);
+
+    // newLi.addEventListener("drag", cardDrag);
+    // newLi.addEventListener("dragend", cardDragEnd);
+
+    // newLi.addEventListener('dragenter', cardDragenter);
+    // newLi.addEventListener('dragexit', cardDragExit);
+    // newLi.addEventListener('dragleave', cardDragLeave);
 
     //=====================
 
