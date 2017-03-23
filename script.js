@@ -160,48 +160,51 @@
   function cardDragOver(event) {
     event.preventDefault();
     overElm = event.currentTarget;
-if (overElm!==dragged) {
-
-  const list = overElm.closest('.cards-list');
-  const tempDropZone = document.createElement('li');
-  tempDropZone.classList.add('over-me');
-  // console.info('cardDragOveer', event.currentTarget);
-  list.insertBefore(tempDropZone, overElm);
-  // event.target.closest('.card').style.background = 'red'
-}
+// if (overElm!==dragged) {
+//
+//   const list = overElm.closest('.cards-list');
+//   const tempDropZone = dragged;
+//
+//   list.insertBefore(tempDropZone, overElm);
+//
+// }
 
   }
 
   function cardDragLeave(event) {
     event.preventDefault();
-    overElm.classList.remove('over-me');
+    // overElm.classList.remove('over-me');
     // event.preventDefault();
     console.info('out');
   }
 
   function cardDragenter(event) {
 
-   console.info(event.currentTarget);
+    // console.info(event.currentTarget);
   }
 
   function cardDragStart(event) {
     dragged = event.target;
-    dragged.style.opacity = .5;
+    dragged.classList.add('draging');
 
   }
 
   function dropCard(event) {
     event.preventDefault();
     const target = event.currentTarget;
-    const newListId = target.closest('.column').getAttribute('uuid');
-    const oldListId = dragged.closest('.column').getAttribute('uuid');
-    overElm.classList.remove('over-me');
-    const taskId = dragged.getAttribute('uuid');
-    const newListIndex = MODEL.getListIndexInAppdataById(newListId);
-    const oldListIndex = MODEL.getListIndexInAppdataById(oldListId);
-    const taskIndex = MODEL.getTaskIndexInListInAppdataById(oldListId, taskId);
-    MODEL.movingTaskToAnotherList(newListIndex, oldListIndex, taskIndex);
-    initPageByHash();
+    const newList = target.closest('.cards-list');
+    dragged.classList.remove('draging');
+    newList.insertBefore(dragged, target);
+
+    // const newListId = target.closest('.column').getAttribute('uuid');
+    // const oldListId = dragged.closest('.column').getAttribute('uuid');
+    // const taskId = dragged.getAttribute('uuid');
+
+    // const newListIndex = MODEL.getListIndexInAppdataById(newListId);
+    // const oldListIndex = MODEL.getListIndexInAppdataById(oldListId);
+    // const taskIndex = MODEL.getTaskIndexInListInAppdataById(oldListId, taskId);
+    // MODEL.movingTaskToAnotherList(newListIndex, oldListIndex, taskIndex);
+
     // const cardId = event.dataTransfer.getItem('uuid');
     // event.preventDefault();
     // console.info(cardId);
