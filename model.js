@@ -140,13 +140,22 @@ const MODEL = (function () {
     return index;
   }
 
-  function movingTaskToAnotherList(newListIndex, oldListIndex, taskIndex) {
+  function movingTaskToAnotherList(newListIndex, oldListIndex, taskIndex, targetIndex) {
+    console.info(targetIndex);
+    if (typeof targetIndex === "number") {
 
-    appData.lists[newListIndex].tasks.push(appData.lists[oldListIndex].tasks[taskIndex]);
-    appData.lists[oldListIndex].tasks.splice(taskIndex, 1);
+      appData.lists[newListIndex].tasks.splice(targetIndex, 0, appData.lists[oldListIndex].tasks[taskIndex]);
+      appData.lists[oldListIndex].tasks.splice(taskIndex, 1);
+      saveAppDataToLocalStorage();
+      console.info(appData);
+    }
+    if (!targetIndex) {
+      appData.lists[newListIndex].tasks.push(appData.lists[oldListIndex].tasks[taskIndex]);
+      appData.lists[oldListIndex].tasks.splice(taskIndex, 1);
 
-    if (newListIndex === undefined) {
-      appData.lists[oldListIndex].push(appData.lists[oldListIndex].tasks[taskIndex])
+      if (newListIndex === undefined) {
+        appData.lists[oldListIndex].push(appData.lists[oldListIndex].tasks[taskIndex])
+      }
     }
     saveAppDataToLocalStorage();
   }
@@ -234,7 +243,6 @@ const MODEL = (function () {
   }
 
   //drag data
-
 
 
   return {

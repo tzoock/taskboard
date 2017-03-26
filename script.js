@@ -119,9 +119,6 @@
     newColumn.setAttribute('class', 'column panel panel-default');
     mainContent.insertBefore(newColumn, addListBtn);
 
-    // const tasksList = newColumn.querySelector('.cards-list');
-    // tasksList.addEventListener('drop', dropCard);
-
     const listName = newColumn.querySelector('.list-name');
     listName.addEventListener('click', editName);
 
@@ -154,12 +151,23 @@
     }
   }
 
+  //draggers
+
   let dragged;
-  let overElm;
+
+  function cardDragStart(event) {
+    console.info('cardDragStart');
+    dragged = event.target;
+    dragged.classList.add('draging');
+
+  }
 
   function cardDragOver(event) {
     event.preventDefault();
-    overElm = event.currentTarget;
+    // const overElm = event.target;
+
+    // const ovElId = overElm.
+    // console.info(overElm);
 // if (overElm!==dragged) {
 //
 //   const list = overElm.closest('.cards-list');
@@ -171,39 +179,25 @@
 
   }
 
-  function cardDragLeave(event) {
-    event.preventDefault();
-    // overElm.classList.remove('over-me');
-    // event.preventDefault();
-    console.info('out');
-  }
-
-  function cardDragenter(event) {
-
-    // console.info(event.currentTarget);
-  }
-
-  function cardDragStart(event) {
-    dragged = event.target;
-    dragged.classList.add('draging');
-
-  }
-
   function dropCard(event) {
     event.preventDefault();
-    const target = event.currentTarget;
+    const target = event.target.closest('.card');
     const newList = target.closest('.cards-list');
     dragged.classList.remove('draging');
+
     newList.insertBefore(dragged, target);
 
-    // const newListId = target.closest('.column').getAttribute('uuid');
-    // const oldListId = dragged.closest('.column').getAttribute('uuid');
-    // const taskId = dragged.getAttribute('uuid');
+    const newListId = target.closest('.column').getAttribute('uuid');
+    const oldListId = dragged.closest('.column').getAttribute('uuid');
+    const taskId = dragged.getAttribute('uuid');
+    const targetId = target.getAttribute('uuid');
 
-    // const newListIndex = MODEL.getListIndexInAppdataById(newListId);
-    // const oldListIndex = MODEL.getListIndexInAppdataById(oldListId);
-    // const taskIndex = MODEL.getTaskIndexInListInAppdataById(oldListId, taskId);
-    // MODEL.movingTaskToAnotherList(newListIndex, oldListIndex, taskIndex);
+    const newListIndex = MODEL.getListIndexInAppdataById(newListId);
+    const oldListIndex = MODEL.getListIndexInAppdataById(oldListId);
+    const taskIndex = MODEL.getTaskIndexInListInAppdataById(oldListId, taskId);
+    const targetIndex = MODEL.getTaskIndexInListInAppdataById(newListId, targetId);
+
+    MODEL.movingTaskToAnotherList(newListIndex, oldListIndex, taskIndex, targetIndex);
 
     // const cardId = event.dataTransfer.getItem('uuid');
     // event.preventDefault();
@@ -214,6 +208,16 @@
 
   }
 
+  // function cardDragLeave(event) {
+  //   // event.preventDefault();
+  //   // overElm.classList.remove('over-me');
+  //   // event.preventDefault();
+  //   // console.info('out');
+  // }
+  // function cardDragenter(event) {
+  //
+  //   // console.info(event.currentTarget);
+  // }
 //   function cardDrag() {
 //     const card = event.currentTarget;
 //     // console.info(card);
@@ -252,9 +256,9 @@
 
     newLi.addEventListener("dragover", cardDragOver);
     newLi.addEventListener("dragstart", cardDragStart);
-    newLi.addEventListener('dragenter', cardDragenter);
+    // newLi.addEventListener('dragenter', cardDragenter);
     newLi.addEventListener('drop', dropCard);
-    newLi.addEventListener('dragleave', cardDragLeave);
+    // newLi.addEventListener('dragleave', cardDragLeave);
 
     // newLi.addEventListener("drag", cardDrag);
     // newLi.addEventListener("dragend", cardDragEnd);
