@@ -1,23 +1,12 @@
-/**
- * Created by Tzoock on 3/19/2017.
- */
-
 
 const MODEL = (function () {
 
-
-  /**
-   *  Privet
-   */
 
   let appData = {
     lists: [],
     members: []
   };
 
-  /**
-   * Public
-   */
 
   function saveAppDataToLocalStorage() {
     localStorage.setItem('appData', JSON.stringify(appData));
