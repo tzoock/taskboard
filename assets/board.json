@@ -8,16 +8,16 @@
           "id": "c7e2f3a9-c2d6-4ebf-8670-44db5ed2d54d",
           "text": "Must attend a daily meeting every morning at 11:00.",
           "members": [
-            "Alex Ilyaev",
-            "Dima Vishnevetsky"
+            "1348ffa0-5984-4bda-87cb-6eaedf6b0b57",
+            "9924980f-dd45-44cc-8c3f-80baff0db0c8"
           ]
         },
         {
           "id": "09334f18-865e-42c0-ba69-b7af0693bf45",
           "text": "The daily standup meeting must not be longer than 15-20 minutes. We must use a stopwatch to limit every members update.",
           "members": [
-            "Alex Ilyaev",
-            "Dima Vishnevetsky"
+            "1348ffa0-5984-4bda-87cb-6eaedf6b0b57",
+            "9924980f-dd45-44cc-8c3f-80baff0db0c8"
           ]
         },
         {
@@ -29,15 +29,15 @@
           "id": "f97a2576-fa66-4654-b7fd-9c303c5a609e",
           "text": "Must attend a daily meeting every morning at 11:00.",
           "members": [
-            "Dima Vishnevetsky"
+            "9924980f-dd45-44cc-8c3f-80baff0db0c8"
           ]
         },
         {
           "id": "b2d6828a-02e5-4da6-ae29-7207e8c4ab6e",
-          "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio, eveniet sed sequi quo quis magni qui nisi quas est eligendi expedita nesciunt error voluptatem ipsa. Doloremque laudantium, minus dignissimos incidunt. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur culpa delectus, impedit ad maxime repudiandae distinctio, id ut molestias, consectetur laudantium itaque ratione et praesentium nulla provident excepturi natus eveniet!.",
+          "text": "add a blur event to the delete list dropdown",
           "members": [
-            "Alex Ilyaev",
-            "Dima Vishnevetsky"
+            "1348ffa0-5984-4bda-87cb-6eaedf6b0b57",
+            "9924980f-dd45-44cc-8c3f-80baff0db0c8"
           ]
         }
       ]
@@ -50,23 +50,23 @@
           "id": "fc9937da-0666-4161-83e7-9e1b3e21e472",
           "text": "Wash the dishes",
           "members": [
-            "Alex Ilyaev",
-            "Dima Vishnevetsky"
+            "1348ffa0-5984-4bda-87cb-6eaedf6b0b57",
+            "9924980f-dd45-44cc-8c3f-80baff0db0c8"
           ]
         },
         {
           "id": "d6bb7009-3cd5-446a-96f4-d7e853281781",
           "text": "Do the laundry",
           "members": [
-            "Gil Tayar"
+            "45975d36-6e65-4b77-9774-58eeb667fb85"
           ]
         },
         {
           "id": "f00555d2-1f39-48bf-b94c-f5da2fb37b17",
           "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio, eveniet sed sequi quo quis magni qui nisi quas est eligendi expedita nesciunt error voluptatem ipsa. Doloremque laudantium, minus dignissimos incidunt. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur culpa delectus, impedit ad maxime repudiandae distinctio, id ut molestias, consectetur laudantium itaque ratione et praesentium nulla provident excepturi natus eveniet!",
           "members": [
-            "Alex Ilyaev",
-            "Dima Vishnevetsky"
+            "1348ffa0-5984-4bda-87cb-6eaedf6b0b57",
+            "9924980f-dd45-44cc-8c3f-80baff0db0c8"
           ]
         }
       ]
@@ -90,15 +90,15 @@
           "id": "c28c1c05-bbe1-454c-a64f-f36ea62fad9b",
           "text": "Redesign Logo",
           "members": [
-            "Alex Ilyaev"
+            "1348ffa0-5984-4bda-87cb-6eaedf6b0b57"
           ]
         },
         {
           "id": "6347a17e-4fda-499b-9200-eed30ba2bec9",
           "text": "Bug: Blurring the list options dropdown does not close the drop down",
           "members": [
-            "Gil Tayar",
-            "Dima Vishnevetsky"
+            "45975d36-6e65-4b77-9774-58eeb667fb85",
+            "9924980f-dd45-44cc-8c3f-80baff0db0c8"
           ]
         }
       ]
@@ -111,9 +111,9 @@
           "id": "716239bc-6ae0-4d2e-96ac-6ab75b675755",
           "text": "Code review",
           "members": [
-            "Alex Ilyaev",
-            "Dima Vishnevetsky",
-            "Gil Tayar"
+            "1348ffa0-5984-4bda-87cb-6eaedf6b0b57",
+            "9924980f-dd45-44cc-8c3f-80baff0db0c8",
+            "45975d36-6e65-4b77-9774-58eeb667fb85"
           ]
         }
       ]

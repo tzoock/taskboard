@@ -535,7 +535,7 @@
   function initBoard() {
     const oReq = new XMLHttpRequest();
     oReq.addEventListener("load", reqBoardListener);
-    oReq.open("GET", "assets/board-advanced.json");
+    oReq.open("GET", "assets/board.json");
     oReq.send();
   }
 
